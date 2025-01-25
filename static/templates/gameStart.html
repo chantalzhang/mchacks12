@@ -2,9 +2,9 @@
     <h2>Choose Your Theme</h2>
     <form id="themeForm" action="/gameRun" method="POST">
         <div class="theme-options">
-            <div class="theme-option" onclick="setTheme('medieval')">
-                <input type="radio" id="medieval" name="initial_theme" value="medieval" required>
-                <label for="medieval">Medieval Fantasy</label>
+            <div class="theme-option" onclick="document.getElementById('fantasy').click()">
+                <input type="radio" id="fantasy" name="initial_theme" value="fantasy" required>
+                <label for="fantasy">Fantasy</label>
                 <p>Embark on an epic quest in a world of magic, dragons, and ancient kingdoms.</p>
             </div>
             
@@ -13,6 +13,9 @@
                 <label for="scifi">Sci-Fi Future</label>
                 <p>Explore the cosmos in a high-tech adventure among the stars.</p>
             </div>
+
+            <input type="hidden" name="first_init" value="true">
+
         </div>
         
         <button type="submit" class="theme-submit-btn">Begin Adventure</button>

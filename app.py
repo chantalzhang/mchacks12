@@ -13,15 +13,21 @@ def endGame():
 @app.route('/gameRun', methods=['GET','POST'])
 def runGame():
     if request.method == 'POST':
-        initial_theme = request.form['initial_theme']
-        match initial_theme:
-            case "medieval":
-                init_dict = json.load(open("resources/medieval.json"))
-            case "scifi":
-                init_dict = json.load(open("resources/scifi.json"))
-        context = Context(init_dict)
-    
-    return render_template('gameRun.html', context=context.get_context())
+        if 'first_init' in request.form:
+            initial_theme = request.form['initial_theme']
+            match initial_theme:
+                case "fantasy":
+                    init_dict = json.load(open("resources/fantasy.json"))
+                case "scifi":
+                    init_dict = json.load(open("resources/scifi.json"))
+            context = Context(init_dict)
+            return render_template('gameRun.html', context=context.get_context())
+        elif 'game_loop' in request.form:
+            #gameloop
+            return render_template('gameRun.html', context = context.get_context())
+        elif 'game_end' in request.form:
+            return render_template('gameVideo.html', context = context.get_context())
+    return render_template('gameRun.html', context = 'first_init' in request.form)
     
 
 @app.route('/gameStart')
