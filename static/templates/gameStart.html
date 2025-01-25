@@ -1,43 +1,68 @@
-<div class="theme-selection">
-    <h2>Choose Your Theme</h2>
-    <form id="themeForm" action="/gameRun" method="POST">
-        <div class="theme-options">
-            <div class="theme-option" onclick="document.getElementById('fantasy').click()">
-                <input type="radio" id="fantasy" name="initial_theme" value="fantasy" required>
-                <label for="fantasy">Fantasy</label>
-                <p>Embark on an epic quest in a world of magic, dragons, and ancient kingdoms.</p>
+<div class="container">
+    <div class="theme-selection">
+        <h2 class="game-title">Choose Your Theme</h2>
+        <form id="themeForm" action="/gameRun" method="POST">
+            <div class="theme-options">
+                <div class="theme-option" onclick="document.getElementById('fantasy').click()">
+                    <input type="radio" id="fantasy" name="initial_theme" value="fantasy" required>
+                    <label for="fantasy">Fantasy</label>
+                    <p>Embark on an epic quest in a world of magic, dragons, and ancient kingdoms.</p>
+                </div>
+                
+                <div class="theme-option" onclick="setTheme('scifi')">
+                    <input type="radio" id="scifi" name="initial_theme" value="scifi" required>
+                    <label for="scifi">Sci-Fi Future</label>
+                    <p>Explore the cosmos in a high-tech adventure among the stars.</p>
+                </div>
+
+                <input type="hidden" name="first_init" value="true">
             </div>
             
-            <div class="theme-option" onclick="setTheme('scifi')">
-                <input type="radio" id="scifi" name="initial_theme" value="scifi" required>
-                <label for="scifi">Sci-Fi Future</label>
-                <p>Explore the cosmos in a high-tech adventure among the stars.</p>
-            </div>
-
-            <input type="hidden" name="first_init" value="true">
-
-        </div>
-        
-        <button type="submit" class="theme-submit-btn">Begin Adventure</button>
-    </form>
+            <button type="submit" class="button">Begin Adventure</button>
+        </form>
+    </div>
 </div>
 
 <style>
     body {
-        transition: background-image 0.5s ease;
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        min-height: 100vh;
         margin: 0;
+        padding: 0;
+        font-family: 'VCR', monospace;
+        background-image: url('/static/images/landingpage.gif');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        color: #fff;
+        min-height: 100vh;
+        transition: background-image 1.5s ease-in-out;
+    }
+
+    @font-face {
+        font-family: 'VCR';
+        src: url('/static/fonts/VCR_OSD_MONO_1.001.ttf') format('truetype');
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
     }
 
     .theme-selection {
-        max-width: 600px;
-        margin: 2rem auto;
-        padding: 1rem;
-        background-color: rgba(255, 255, 255, 0.9);
+        max-width: 800px;
+        padding: 2rem;
+        background-color: rgba(0, 0, 0, 0.8);
         border-radius: 12px;
+    }
+
+    .game-title {
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        color: #fff;
     }
 
     .theme-options {
@@ -49,45 +74,49 @@
     .theme-option {
         flex: 1;
         padding: 1.5rem;
-        border: 2px solid #ccc;
+        border: 2px solid #4e587f;
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.3s ease;
         user-select: none;
-        background-color: rgba(255, 255, 255, 0.9);
+        background-color: rgba(78, 88, 127, 0.3);
+        color: #fff;
     }
 
     .theme-option:hover {
-        border-color: #666;
-        transform: translateY(-2px);
-    }
-
-    .theme-option input[type="radio"] {
-        margin-right: 0.5rem;
+        border-color: #5c84ae;
+        transform: scale(1.02);
     }
 
     .theme-option p {
         margin-top: 0.5rem;
         font-size: 0.9rem;
-        color: #666;
+        color: #ccc;
     }
 
-    .theme-submit-btn {
-        display: block;
-        width: 200px;
-        margin: 2rem auto;
-        padding: 1rem;
-        background-color: #4CAF50;
-        color: white;
+    .button {
+        padding: 1rem 2rem;
+        font-size: 1.5rem;
+        background-color: #4e587f;
+        color: #fff;
         border: none;
-        border-radius: 4px;
+        border-radius: 0.5rem;
         cursor: pointer;
-        font-size: 1.1rem;
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        font-family: 'VCR', monospace;
+        text-transform: uppercase;
+        min-width: 200px;
+        display: block;
+        margin: 2rem auto 0;
     }
 
-    .theme-submit-btn:hover {
-        background-color: #45a049;
+    .button:hover {
+        background-color: #5c84ae;
+        transform: scale(1.05);
+    }
+
+    .button:active {
+        transform: scale(0.95);
     }
 </style>
 
@@ -101,15 +130,29 @@
     ];
     
     const scifiImages = [
-        '/static/images/locations/scifi/alientropic.webp',
-        '/static/images/locations/scifi/darkplanet.webp',
-        '/static/images/locations/scifi/frozenplanet.webp',
-        '/static/images/locations/scifi/moon.webp',
-        '/static/images/locations/scifi/shiplookout.webp',
+        '/static/images/locations/space/alientropic.webp',
+        '/static/images/locations/space/darkplanet.webp',
+        '/static/images/locations/space/frozenplanet.webp',
+        '/static/images/locations/space/moon.webp',
+        '/static/images/locations/space/shiplookout.webp',
     ];
 
+    // Preload all images on page load
+    window.onload = function() {
+        // Preload fantasy images
+        fantasyImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+        
+        // Preload scifi images
+        scifiImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+    };
+
     function startSlideshow(images) {
-        // Clear any existing slideshow
         if (slideshowInterval) {
             clearInterval(slideshowInterval);
         }
@@ -120,13 +163,13 @@
         slideshowInterval = setInterval(() => {
             currentImageIndex = (currentImageIndex + 1) % images.length;
             document.body.style.backgroundImage = `url('${images[currentImageIndex]}')`;
-        }, 5000); // Change image every 5 seconds
+        }, 3000); // Set to 3000ms (3s) to allow for complete 1.5s transition
     }
 
     function setTheme(theme) {
         document.getElementById(theme).checked = true;
         
-        if (theme === 'medieval') {
+        if (theme === 'fantasy') {
             startSlideshow(fantasyImages);
         } else if (theme === 'scifi') {
             startSlideshow(scifiImages);
