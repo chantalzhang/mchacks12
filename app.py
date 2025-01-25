@@ -11,8 +11,7 @@ global context
 MODEL ="gpt-3.5-turbo"
 MODEL_DEFINITION = {
     "role": "system",
-    "content": 
-    f"You are an assistant that is helping us to generate a dynamic storyline.
+    "content": """You are an assistant that is helping us to generate a dynamic storyline.
     You will be given the context of a story in JSON format.
     In the context: 
     - The player will have a status, location, and alive field;
@@ -36,8 +35,7 @@ MODEL_DEFINITION = {
         - complete story string should be updated to reflect the new state of the complete story.
         - narrative_state should be updated to reflect next narrative state.
     - added_npc: a JSON object that describes the newly created NPC with each of the fields populated.
-    The story_output should be a string that is a a few sentences long. It should be a continuation of the story, but not the entire story.
-    "
+    The story_output should be a string that is a a few sentences long. It should be a continuation of the story, but not the entire story."""
 }
 
 @app.route('/gameEnd')
