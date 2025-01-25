@@ -3,7 +3,7 @@
 # Check if venv exists, if not create it
 if [ ! -d "venv" ]; then
     echo "Creating virtual environment..."
-    python -m venv venv
+    python3 -m venv venv
 fi
 
 # Install/update requirements
@@ -14,7 +14,7 @@ else
     VENV_PATH="./venv/bin"
 fi
 
-"$VENV_PATH/pip" install -r requirements.txt || {
+"$VENV_PATH/pip3" install -r requirements.txt || {
     echo "Error: Failed to install requirements"
     exit 1
 }
