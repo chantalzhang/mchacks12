@@ -18,8 +18,8 @@ def runGame():
             match initial_theme:
                 case "fantasy":
                     init_dict = json.load(open("resources/fantasy.json"))
-                case "scifi":
-                    init_dict = json.load(open("resources/scifi.json"))
+                case "space":
+                    init_dict = json.load(open("resources/space.json"))
             context = Context(init_dict)
             return render_template('gameRun.html', context=context.get_context())
         elif 'game_loop' in request.form:
