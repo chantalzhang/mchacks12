@@ -1,0 +1,43 @@
+:root {
+  /* Primary Colors */
+  --primary-color: #2563eb;        /* Bright blue */
+  --primary-light: #60a5fa;        /* Light blue */
+  --primary-dark: #1e40af;         /* Dark blue */
+
+  /* Secondary Colors */
+  --secondary-color: #10b981;      /* Green */
+  --secondary-light: #34d399;      /* Light green */
+  --secondary-dark: #059669;       /* Dark green */
+
+  /* Neutral Colors */
+  --neutral-100: #f3f4f6;          /* Lightest gray */
+  --neutral-200: #e5e7eb;          /* Lighter gray */
+  --neutral-300: #d1d5db;          /* Light gray */
+  --neutral-400: #9ca3af;          /* Gray */
+  --neutral-500: #6b7280;          /* Medium gray */
+  --neutral-600: #4b5563;          /* Dark gray */
+  --neutral-700: #374151;          /* Darker gray */
+  --neutral-800: #1f2937;          /* Very dark gray */
+  --neutral-900: #111827;          /* Almost black */
+
+  /* Semantic Colors */
+  --success-color: #22c55e;        /* Green */
+  --warning-color: #f59e0b;        /* Orange */
+  --error-color: #ef4444;          /* Red */
+  --info-color: #3b82f6;           /* Blue */
+
+  /* Background Colors */
+  --bg-primary: #ffffff;           /* White */
+  --bg-secondary: #f9fafb;         /* Light gray */
+  --bg-tertiary: #f3f4f6;          /* Lighter gray */
+
+  /* Text Colors */
+  --text-primary: #111827;         /* Almost black */
+  --text-secondary: #4b5563;       /* Dark gray */
+  --text-tertiary: #9ca3af;        /* Gray */
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--secondary-color);
+}
