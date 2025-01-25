@@ -1,22 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask App</title>
-    <link rel="stylesheet" href="/static/styles/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GAIA</title>
+  <link rel="stylesheet" href="/static/styles/landing.css">
 </head>
 <body>
-    <h1>GAME</h1>
-    <div id="context">
+  <div class="container">
+    <h1 class="game-title">GAIA</h1>
+    <div class="button-container">
+      <button class="button start-game">Start Game</button>
+      <button class="button how-to-play">How to Play</button>
+      <button class="button save-files">Save Files</button>
     </div>
-
-    <button id="startGame">Start Game</button>
-
-    <script>
-        document.getElementById("startGame").addEventListener("click", function() {
-            window.location.href = "/gameStart";
-        });
-    </script>
+  </div>
+  <script src="/static/scripts/landing.js"></script>
 </body>
 </html>
