@@ -3,15 +3,15 @@
         <h2 class="game-title">Choose Your Theme</h2>
         <form id="themeForm" action="/gameRun" method="POST">
             <div class="theme-options">
-                <div class="theme-option" onclick="document.getElementById('fantasy').click()">
+                <div class="theme-option" onclick="setTheme('fantasy')">
                     <input type="radio" id="fantasy" name="initial_theme" value="fantasy" required>
                     <label for="fantasy">Fantasy</label>
                     <p>Embark on an epic quest in a world of magic, dragons, and ancient kingdoms.</p>
                 </div>
                 
-                <div class="theme-option" onclick="setTheme('scifi')">
-                    <input type="radio" id="scifi" name="initial_theme" value="scifi" required>
-                    <label for="scifi">Sci-Fi Future</label>
+                <div class="theme-option" onclick="setTheme('space')">
+                    <input type="radio" id="space" name="initial_theme" value="space" required>
+                    <label for="space">Space Future</label>
                     <p>Explore the cosmos in a high-tech adventure among the stars.</p>
                 </div>
 
@@ -32,9 +32,13 @@
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
+        background-attachment: fixed;
         color: #fff;
         min-height: 100vh;
         transition: background-image 1.5s ease-in-out;
+        will-change: background-image;
+        -webkit-backface-visibility: hidden;
+        -webkit-transform: translateZ(0);
     }
 
     @font-face {
@@ -123,13 +127,15 @@
 <script>
     let slideshowInterval;
     let currentImageIndex = 0;
+    let currentTheme = null;
+    
     const fantasyImages = [
         '/static/images/locations/fantasy/cave.webp',
         '/static/images/locations/fantasy/forest.webp',
         '/static/images/locations/fantasy/sky.webp',
     ];
     
-    const scifiImages = [
+    const spaceImages = [
         '/static/images/locations/space/alientropic.webp',
         '/static/images/locations/space/darkplanet.webp',
         '/static/images/locations/space/frozenplanet.webp',
@@ -137,20 +143,17 @@
         '/static/images/locations/space/shiplookout.webp',
     ];
 
-    // Preload all images on page load
-    window.onload = function() {
-        // Preload fantasy images
-        fantasyImages.forEach(src => {
-            const img = new Image();
-            img.src = src;
-        });
-        
-        // Preload scifi images
-        scifiImages.forEach(src => {
+    // Preload all images immediately when script loads
+    const preloadImages = (imageArray) => {
+        imageArray.forEach(src => {
             const img = new Image();
             img.src = src;
         });
     };
+
+    // Preload all image sets immediately
+    preloadImages(fantasyImages);
+    preloadImages(spaceImages);
 
     function startSlideshow(images) {
         if (slideshowInterval) {
@@ -158,21 +161,31 @@
         }
         
         currentImageIndex = 0;
-        document.body.style.backgroundImage = `url('${images[currentImageIndex]}')`;
+        requestAnimationFrame(() => {
+            document.body.style.backgroundImage = `url('${images[currentImageIndex]}')`;
+        });
         
         slideshowInterval = setInterval(() => {
             currentImageIndex = (currentImageIndex + 1) % images.length;
-            document.body.style.backgroundImage = `url('${images[currentImageIndex]}')`;
-        }, 3000); // Set to 3000ms (3s) to allow for complete 1.5s transition
+            requestAnimationFrame(() => {
+                document.body.style.backgroundImage = `url('${images[currentImageIndex]}')`;
+            });
+        }, 3000);
     }
 
     function setTheme(theme) {
+        // If it's the same theme, don't restart the slideshow
+        if (theme === currentTheme) {
+            return;
+        }
+        
         document.getElementById(theme).checked = true;
+        currentTheme = theme;
         
         if (theme === 'fantasy') {
             startSlideshow(fantasyImages);
-        } else if (theme === 'scifi') {
-            startSlideshow(scifiImages);
+        } else if (theme === 'space') {
+            startSlideshow(spaceImages);
         }
     }
 </script>
