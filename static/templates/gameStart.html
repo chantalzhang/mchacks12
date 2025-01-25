@@ -2,13 +2,13 @@
     <h2>Choose Your Theme</h2>
     <form id="themeForm" action="/gameRun" method="POST">
         <div class="theme-options">
-            <div class="theme-option" onclick="document.getElementById('medieval').click()">
+            <div class="theme-option" onclick="setTheme('medieval')">
                 <input type="radio" id="medieval" name="initial_theme" value="medieval" required>
                 <label for="medieval">Medieval Fantasy</label>
                 <p>Embark on an epic quest in a world of magic, dragons, and ancient kingdoms.</p>
             </div>
             
-            <div class="theme-option" onclick="document.getElementById('scifi').click()">
+            <div class="theme-option" onclick="setTheme('scifi')">
                 <input type="radio" id="scifi" name="initial_theme" value="scifi" required>
                 <label for="scifi">Sci-Fi Future</label>
                 <p>Explore the cosmos in a high-tech adventure among the stars.</p>
@@ -20,10 +20,21 @@
 </div>
 
 <style>
+    body {
+        transition: background-image 0.5s ease;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        margin: 0;
+    }
+
     .theme-selection {
         max-width: 600px;
         margin: 2rem auto;
         padding: 1rem;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
     }
 
     .theme-options {
@@ -40,6 +51,7 @@
         cursor: pointer;
         transition: all 0.3s ease;
         user-select: none;
+        background-color: rgba(255, 255, 255, 0.9);
     }
 
     .theme-option:hover {
@@ -75,3 +87,46 @@
         background-color: #45a049;
     }
 </style>
+
+<script>
+    let slideshowInterval;
+    let currentImageIndex = 0;
+    const fantasyImages = [
+        '/static/images/locations/fantasy/cave.webp',
+        '/static/images/locations/fantasy/forest.webp',
+        '/static/images/locations/fantasy/sky.webp',
+    ];
+    
+    const scifiImages = [
+        '/static/images/locations/scifi/alientropic.webp',
+        '/static/images/locations/scifi/darkplanet.webp',
+        '/static/images/locations/scifi/frozenplanet.webp',
+        '/static/images/locations/scifi/moon.webp',
+        '/static/images/locations/scifi/shiplookout.webp',
+    ];
+
+    function startSlideshow(images) {
+        // Clear any existing slideshow
+        if (slideshowInterval) {
+            clearInterval(slideshowInterval);
+        }
+        
+        currentImageIndex = 0;
+        document.body.style.backgroundImage = `url('${images[currentImageIndex]}')`;
+        
+        slideshowInterval = setInterval(() => {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            document.body.style.backgroundImage = `url('${images[currentImageIndex]}')`;
+        }, 5000); // Change image every 5 seconds
+    }
+
+    function setTheme(theme) {
+        document.getElementById(theme).checked = true;
+        
+        if (theme === 'medieval') {
+            startSlideshow(fantasyImages);
+        } else if (theme === 'scifi') {
+            startSlideshow(scifiImages);
+        }
+    }
+</script>
