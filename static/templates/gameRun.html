@@ -15,7 +15,8 @@
     <script>
         // Get the context from the data attribute
         const contextElement = document.getElementById('context-data');
-        console.log("Game Context:", document.getElementById('context-data').innerHTML);
+        const context = JSON.parse(contextElement.innerHTML);
+        console.log("Game initial theme:", context.init_theme);
     </script>
 </body>
 </html>
