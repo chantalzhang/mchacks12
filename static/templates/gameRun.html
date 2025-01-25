@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAIA - Game</title>
+    <link rel="stylesheet" href="/static/styles/styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div id="context-data" style="display: none;">{{context}}</div>
+        <pre id="context-display"></pre>
+    </div>
+
+    <script>
+        // Get the context from the data attribute
+        const contextElement = document.getElementById('context-data');
+        console.log("Game Context:", document.getElementById('context-data').innerHTML);
+    </script>
+</body>
+</html>
