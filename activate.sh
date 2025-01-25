@@ -3,7 +3,7 @@
 # Check if venv exists, if not create it
 if [ ! -d "venv" ]; then
     echo "Creating virtual environment..."
-    python3 -m venv venv
+    python -m venv venv
 fi
 
 # Install/update requirements
