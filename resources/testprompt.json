@@ -1,37 +1,5 @@
 {
-    "user_input": "I want to investigate the church",
-    "current_context": {
-        "player": {
-            "status": "healthy",
-            "location": "town square",
-            "alive": true
-        },
-        "npcs": [
-            {
-                "class": "merchant",
-                "location": "market",
-                "nature": "friendly",
-                "status": "busy",
-                "alive": true
-            },
-            {
-                "class": "guard",
-                "location": "town gate",
-                "nature": "suspicious",
-                "status": "alert",
-                "alive": true
-            }
-        ],
-        "major_story_events": [
-            "Player arrived in the mysterious town",
-            "Met a suspicious guard at the gate",
-            "Discovered rumors of a curse from local merchant"
-        ],
-        "complete_story": "A traveler arrives in a mysterious town, immediately drawing the attention of a suspicious guard. While exploring the town square, they encounter a friendly merchant who shares disturbing rumors about a curse that befalls visitors who stay too long.",
-        "init_theme": {
-            "initial_prompt": "You find yourself in a mysterious medieval town shrouded in fog.",
-            "available_locations": ["town square", "market", "town gate", "inn", "dark alley", "church"]
-        },
-        "narrative_state": "exposition"
-    }
+    "user_input": "Throw myself out the airlock",
+    "current_context":                 {"player": {"_status": "alive", "_location": "start", "_alive": true}, "npcs": [], "major_story_events": [], "complete_story": "", "init_theme": {"initial_prompt": "You are a space astronaut aboard the International Space Station.\n\nAs you float in the serene environment of zero gravity, your daily routine is suddenly interrupted by a series of unexpected alerts from the station's systems. The Earth gleams beautifully through the cupola window, but something feels different today. The usual chatter from Mission Control has gone quiet, and the station's instruments are showing unusual readings.\n\nYou're surrounded by sophisticated equipment, scientific instruments, and the gentle hum of the station's life support systems. Your training has prepared you for emergencies, but this situation feels unprecedented.\n\nWhat would you like to do?", "available_locations": ["space station", "moon", "mars"]}, "narrative_state": "exposition"}
+
 }
