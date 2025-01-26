@@ -53,9 +53,33 @@ def prompt_gpt(user_input, context):
     )
     return response
 
+@app.route('/previewgamerun')
+def previewGameRun():
+    dummy_response = {
+        "story_output": "As you make your final decision, darkness closes in. Your journey ends here, brave adventurer.",
+        "context": {
+            "player": {
+                "_status": "dead",
+                "_location": "forest",
+                "_alive": "dead"
+            },
+            "npcs": [],
+            "major_story_events": ["Player died in the forest"],
+            "narrative_state": "resolution"
+        }
+    }
+    context = Context(json.load(open("resources/fantasy.json")))    
+    return render_template('gameRun.html', context = context.get_context(), response = dict_to_string(dummy_response))
+
+
+
 @app.route('/gameEnd')
 def endGame():
     return render_template('gameEnd.html')
+
+@app.route('/gameVideo')
+def gameVideo():
+    return render_template('gameVideo.html')
 
 @app.route('/gameRun', methods=['GET','POST'])
 def runGame():
@@ -81,8 +105,6 @@ def runGame():
             #     logfile.write(f"Response at {datetime.datetime.now()}: {str(response)}\n")
             context.update_context(response)
             return render_template('gameRun.html', context = context.get_context(), response = response.choices[0].message.content)
-        elif 'game_end' in request.form:
-            return render_template('gameVideo.html', context = context.get_context())
         
 
     return render_template('gameRun.html', context = 'first_init' in request.form)
@@ -95,10 +117,6 @@ def startGame():
 @app.route('/')
 def home():
     return render_template('index.html')
-
-@app.route('/howToPlay')
-def howToPlay():
-    return render_template('howToPlay.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

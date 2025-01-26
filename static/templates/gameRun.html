@@ -133,6 +133,15 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #5c84ae;
         }
+
+        .button:hover {
+            background-color: #5c84ae;
+            transform: scale(1.05);
+        }
+
+        .button:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body>
@@ -144,11 +153,30 @@
                 <br><br><br>
                 {{context}}
             </div>
+            <div id="playerData" style="display: block;">{% set response_json = response|from_json %}{{response_json['context']['player']['_alive']}}</div>
             <div class="character-space" id="characterSpace">
                 <!-- Reserved space for character sprites -->
             </div>
         </div>
-
+        <div id="gameOverButton" style="display: none; text-align: center; margin-bottom: 50px;">
+            <form action="/gameVideo" method="GET">
+                <button type="submit" class="button" style="
+                    padding: 1rem 2rem;
+                    font-size: 1.5rem;
+                    background-color: #4e587f;
+                    color: #fff;
+                    border: none;
+                    border-radius: 0.5rem;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease, transform 0.3s ease;
+                    font-family: 'VCR', monospace;
+                    text-transform: uppercase;
+                    min-width: 200px;
+                    text-align: center;">
+                    Life Review
+                </button>
+            </form>
+        </div>
         <div class="input-container">
             <form id="playerForm" action="/gameRun" method="POST">
                 <input type="hidden" name="game_loop" value="true">
@@ -169,6 +197,9 @@
     </div>
 
     <script>
+
+        
+
         // Auto-scroll narration to bottom when new content is added
         const narrationBox = document.getElementById('narration');
         const gameContainer = document.getElementById('gameContainer');
@@ -210,6 +241,24 @@
         document.addEventListener('click', function() {
             document.getElementById('playerInput').focus();
         });
+
+        function checkPlayerStatus() {
+            try {
+                const playerData = document.getElementById('playerData').innerHTML;
+                if (playerData === "dead") {
+                    // Show game over button
+                    console.log("this")
+                    document.getElementById('gameOverButton').style.display = 'block';
+                    // Hide input container
+                    document.querySelector('.input-container').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error parsing player data:', error);
+            }
+        }
+
+        // Call this when the page loads
+        document.addEventListener('DOMContentLoaded', checkPlayerStatus);
     </script>
 </body>
 </html>
