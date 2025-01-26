@@ -42,7 +42,7 @@ def video_worker(worker_id):
                 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 thread_id = threading.current_thread().ident
                 logfile.write(f"[{current_time}] Worker {worker_id} (Thread ID: {thread_id}) processing video for response: {str(response_data)[:200]}...\n")
-                generate_video(response_data)
+                generate_video(response_data, worker_id)
             
             video_status[user_id] = "completed"
             
