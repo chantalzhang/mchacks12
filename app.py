@@ -88,5 +88,9 @@ def startGame():
 def home():
     return render_template('index.html')
 
+@app.route('/howToPlay')
+def howToPlay():
+    return render_template('howToPlay.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
