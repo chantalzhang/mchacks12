@@ -267,6 +267,10 @@ def home():
 def how_to_play():
     return render_template('howToPlay.html')
 
+@app.route('/loading')
+def loading():
+    return render_template('loading.html')
+
 # Cleanup function to stop workers gracefully
 def cleanup_workers():
     # Signal all workers to stop

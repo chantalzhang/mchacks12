@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading</title>
+  <link rel="stylesheet" href="/static/styles/landing.css"> <!-- Use the same stylesheet -->
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'VCR', monospace; /* Match font from the rest of the app */
+      color: #fff;
+      position: relative;
+      flex-direction: column; /* Stack elements vertically */
+    }
+
+    .loading-text {
+      font-size: 5rem; /* Increased font size */
+      opacity: 1; /* Ensure opacity is set to 1 */
+      position: absolute;
+      top: 20%; /* Position higher on the screen */
+    }
+
+    .ellipsis {
+      font-size: 6rem; /* Increased font size for ellipsis */
+      position: absolute;
+      top: 25%; /* Adjusted to position lower than "Loading" */
+      opacity: 0; /* Start with ellipsis hidden */
+      transition: opacity 0.5s ease;
+    }
+
+    .quote-text {
+      position: absolute;
+      bottom: 20px;
+      font-size: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-text" id="loadingText"></div>
+  <div class="ellipsis" id="ellipsis">...</div>
+  <div class="quote-text" id="quoteText"></div>
+
+  <script>
+    const loadingText = document.getElementById('loadingText');
+    const ellipsis = document.getElementById('ellipsis');
+    const quoteText = document.getElementById('quoteText');
+    const quotes = [
+      "Creating scenes...",
+      "Creating your movie...",
+      "Setting the stage...",
+      "Bringing characters to life...",
+      "Crafting your adventure..."
+    ];
+    let quoteIndex = 0;
+
+    function typeLoadingText() {
+      let text = "Loading";
+      let index = 0;
+
+      function type() {
+        if (index < text.length) {
+          loadingText.textContent += text.charAt(index);
+          index++;
+          setTimeout(type, 200); // Typing speed
+        } else {
+          loadingText.style.opacity = 1; // Fade in the text
+          setTimeout(startEllipsisAnimation, 500); // Start ellipsis animation after loading text
+          setTimeout(cycleQuotes, 1000); // Wait before cycling quotes
+        }
+      }
+      type();
+    }
+
+    function startEllipsisAnimation() {
+      let dotCount = 0;
+      function animate() {
+        ellipsis.style.opacity = 1; // Fade in ellipsis
+        setTimeout(() => {
+          ellipsis.style.opacity = 0; // Fade out ellipsis
+          dotCount = (dotCount + 1) % 4; // Cycle through 0 to 3 dots
+          ellipsis.textContent = '.'.repeat(dotCount); // Update ellipsis
+          setTimeout(animate, 500); // Repeat animation
+        }, 500); // Duration of ellipsis visibility
+      }
+      animate();
+    }
+
+    function cycleQuotes() {
+      quoteText.style.opacity = 1; // Fade in the quote text
+      quoteText.textContent = quotes[quoteIndex];
+      quoteIndex = (quoteIndex + 1) % quotes.length; // Cycle through quotes
+
+      setTimeout(() => {
+        quoteText.style.opacity = 0; // Fade out the quote text
+        setTimeout(cycleQuotes, 1000); // Wait before showing the next quote
+      }, 3000); // Display each quote for 3 seconds
+    }
+
+    typeLoadingText();
+
+    // Redirect to the loading page every 10 seconds
+    setInterval(() => {
+      window.location.href = '/loading'; // Change this to your loading page endpoint
+    }, 10000); // 10000 milliseconds = 10 seconds
+  </script>
+</body>
+</html>
