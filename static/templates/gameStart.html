@@ -141,17 +141,24 @@
     let isTransitioning = false;
     
     const fantasyImages = [
+        '/static/images/locations/fantasy/castle.webp',
+        '/static/images/locations/fantasy/forest_swamp.webp',
         '/static/images/locations/fantasy/cave.webp',
+        '/static/images/locations/fantasy/castle_dungeon.webp',
+        '/static/images/locations/fantasy/castle_library.webp',
         '/static/images/locations/fantasy/forest.webp',
         '/static/images/locations/fantasy/sky.webp',
     ];
     
     const spaceImages = [
-        '/static/images/locations/space/alientropic.webp',
-        '/static/images/locations/space/darkplanet.webp',
-        '/static/images/locations/space/frozenplanet.webp',
-        '/static/images/locations/space/moon.webp',
+        '/static/images/locations/space/homeship.webp',
         '/static/images/locations/space/shiplookout.webp',
+        '/static/images/locations/space/moon.webp',
+        '/static/images/locations/space/darkplanet.webp',
+        '/static/images/locations/space/alientropic.webp',
+        '/static/images/locations/space/frozenplanet.webp',
+        '/static/images/locations/space/desert.webp',
+        '/static/images/locations/space/space.webp',
     ];
 
     // Preload images before showing them
@@ -195,12 +202,14 @@
         await setBackgroundImage(images[0]);
         currentImageIndex = 0;
         
-        // Start the slideshow
-        slideshowInterval = setInterval(async () => {
-            if (isTransitioning) return;
-            currentImageIndex = (currentImageIndex + 1) % images.length;
-            await setBackgroundImage(images[currentImageIndex]);
-        }, 4000);
+        // Start the slideshow sooner (after 2 seconds instead of 4)
+        setTimeout(() => {
+            slideshowInterval = setInterval(async () => {
+                if (isTransitioning) return;
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                await setBackgroundImage(images[currentImageIndex]);
+            }, 4000); // Keep 4000ms for subsequent transitions
+        }, 0); // Reduced initial wait to 2000ms
     }
 
     async function setTheme(theme) {
