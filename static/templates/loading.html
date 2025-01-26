@@ -16,99 +16,68 @@
       color: #fff;
       position: relative;
       flex-direction: column; /* Stack elements vertically */
+      overflow: hidden; /* Prevent scrolling */
     }
 
-    .loading-text {
-      font-size: 5rem; /* Increased font size */
-      opacity: 1; /* Ensure opacity is set to 1 */
+    /* Overlay for darkening the background */
+    .overlay {
       position: absolute;
-      top: 20%; /* Position higher on the screen */
-    }
-
-    .ellipsis {
-      font-size: 6rem; /* Increased font size for ellipsis */
-      position: absolute;
-      top: 25%; /* Adjusted to position lower than "Loading" */
-      opacity: 0; /* Start with ellipsis hidden */
-      transition: opacity 0.5s ease;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); /* Darker and more opaque */
+      z-index: 1; /* Ensure overlay is below text */
     }
 
     .quote-text {
-      position: absolute;
-      bottom: 20px;
-      font-size: 1.5rem;
-      opacity: 0;
-      transition: opacity 0.5s ease;
+      font-size: 4rem; /* Large font size for quotes */
+      position: relative; /* Keep it in the same flow */
+      opacity: 0; /* Start with quotes hidden */
+      transition: opacity 1s ease; /* Smooth transition for opacity */
+      z-index: 2; /* Ensure quotes are above overlay */
+      margin-top: -20%; /* Position higher on the screen */
+      text-align: center; /* Center the text */
     }
   </style>
 </head>
 <body>
-  <div class="loading-text" id="loadingText"></div>
-  <div class="ellipsis" id="ellipsis">...</div>
-  <div class="quote-text" id="quoteText"></div>
+  <div class="overlay"></div> <!-- Dark overlay -->
+  <div class="quote-text" id="quoteText"></div> <!-- Quote text positioned in the center -->
 
   <script>
-    const loadingText = document.getElementById('loadingText');
-    const ellipsis = document.getElementById('ellipsis');
     const quoteText = document.getElementById('quoteText');
     const quotes = [
-      "Creating scenes...",
-      "Creating your movie...",
       "Setting the stage...",
       "Bringing characters to life...",
-      "Crafting your adventure..."
+      "Crafting your adventure...",
+      "Creating scenes...",
+      "Creating your movie...",
     ];
     let quoteIndex = 0;
-
-    function typeLoadingText() {
-      let text = "Loading";
-      let index = 0;
-
-      function type() {
-        if (index < text.length) {
-          loadingText.textContent += text.charAt(index);
-          index++;
-          setTimeout(type, 200); // Typing speed
-        } else {
-          loadingText.style.opacity = 1; // Fade in the text
-          setTimeout(startEllipsisAnimation, 500); // Start ellipsis animation after loading text
-          setTimeout(cycleQuotes, 1000); // Wait before cycling quotes
-        }
-      }
-      type();
-    }
-
-    function startEllipsisAnimation() {
-      let dotCount = 0;
-      function animate() {
-        ellipsis.style.opacity = 1; // Fade in ellipsis
-        setTimeout(() => {
-          ellipsis.style.opacity = 0; // Fade out ellipsis
-          dotCount = (dotCount + 1) % 4; // Cycle through 0 to 3 dots
-          ellipsis.textContent = '.'.repeat(dotCount); // Update ellipsis
-          setTimeout(animate, 500); // Repeat animation
-        }, 500); // Duration of ellipsis visibility
-      }
-      animate();
-    }
 
     function cycleQuotes() {
       quoteText.style.opacity = 1; // Fade in the quote text
       quoteText.textContent = quotes[quoteIndex];
-      quoteIndex = (quoteIndex + 1) % quotes.length; // Cycle through quotes
+      
+      // Increment the index for the next quote
+      quoteIndex = (quoteIndex + 1) % quotes.length; // Loop back to the first quote after the last
 
+      // Set a timeout to fade out the quote after a certain duration
       setTimeout(() => {
         quoteText.style.opacity = 0; // Fade out the quote text
-        setTimeout(cycleQuotes, 1000); // Wait before showing the next quote
       }, 3000); // Display each quote for 3 seconds
-    }
 
-    typeLoadingText();
+      // Call cycleQuotes again after the fade out duration
+      setTimeout(cycleQuotes, 4000); // Wait for fade out to complete before showing the next quote
+    }
 
     // Redirect to the loading page every 10 seconds
     setInterval(() => {
       window.location.href = '/loading'; // Change this to your loading page endpoint
-    }, 10000); // 10000 milliseconds = 10 seconds
+    }, 20000); // 10000 milliseconds = 10 seconds
+
+    cycleQuotes(); // Start cycling through quotes
   </script>
 </body>
 </html>
