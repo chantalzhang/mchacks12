@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
             font-family: 'VCR', monospace;
-            background-image: url('/static/images/locations/fantasy/forest.webp');
+            background-image: url('{{location_img}}');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -192,17 +192,19 @@
             <div class="narration-box" id="narration">
                 {% set response_json = response|from_json %}
                 {{ response_json['story_output'] }}
-                <br><br><br>
-                
             </div>
             <div id="hiddencontext" style="display: none;">{{ context }}</div>
             <div id="playerData" style="display: none;">{% set response_json = response|from_json %}{{response_json['context']['player']['_alive']}}</div>
             <div class="character-space" id="characterSpace">
                 {% if hasNPC %}
                     <div class="npc-image">
+<<<<<<< HEAD
+                        <img src="{{npc_img}}" alt="NPC" style="width: 100%; height: auto;">
+=======
                         <img src="/static/images/npc/fantasy/wiseman.png" alt="NPC" style="width: 100%; height: auto;">
+>>>>>>> 5a0e824a857db1358f4f7cc780a667233d2ab88c
                         <div class="npc-description">
-                            I am the wizard of the forest, here to guide you on your journey through magic and mystery.
+                            {{npc_description}}
                         </div>
                     </div>
                 {% endif %}
