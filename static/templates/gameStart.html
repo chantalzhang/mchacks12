@@ -6,15 +6,14 @@
                 <div class="theme-option" onclick="setTheme('fantasy')">
                     <input type="radio" id="fantasy" name="initial_theme" value="fantasy" required>
                     <label for="fantasy">Fantasy</label>
-                    <p>Embark on an epic quest in a world of magic, dragons, and ancient kingdoms.</p>
+                    <p>Embark on an epic journey through a world of magic, forging your destiny against mystical forces.</p>
                 </div>
                 
                 <div class="theme-option" onclick="setTheme('space')">
                     <input type="radio" id="space" name="initial_theme" value="space" required>
                     <label for="space">Space Future</label>
-                    <p>Explore the cosmos in a high-tech adventure among the stars.</p>
+                    <p>Explore the cosmos among the stars and uncover the endless mysteries of the universe.<p>
                 </div>
-
                 <input type="hidden" name="first_init" value="true">
             </div>
             
@@ -28,18 +27,10 @@
         margin: 0;
         padding: 0;
         font-family: 'VCR', monospace;
-        background-image: url('/static/images/landingpage.gif');
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-attachment: fixed;
+        background-color: black; /* Fallback color */
         color: #fff;
         min-height: 100vh;
-        transition: background-image 2s ease-in-out;
-        will-change: background-image;
-        -webkit-backface-visibility: hidden;
-        -webkit-transform: translateZ(0) scale(1.0, 1.0);
-        background-color: black; /* Fallback color during transitions */
+        overflow: hidden; /* Prevent scrollbars during animation */
     }
 
     @font-face {
@@ -132,6 +123,33 @@
     .button:active {
         transform: scale(0.95);
     }
+
+    .background-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+
+    .background-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        transition: opacity 2s ease-in-out;
+        will-change: opacity;
+        opacity: 0;
+    }
+
+    .background-layer.active {
+        opacity: 1;
+    }
 </style>
 
 <script>
@@ -139,6 +157,21 @@
     let currentImageIndex = 0;
     let currentTheme = null;
     let isTransitioning = false;
+    let activeLayer = 0;
+    
+    // Create background layers
+    const backgroundContainer = document.createElement('div');
+    backgroundContainer.className = 'background-container';
+    const layer1 = document.createElement('div');
+    const layer2 = document.createElement('div');
+    layer1.className = 'background-layer active';
+    layer2.className = 'background-layer';
+    backgroundContainer.appendChild(layer1);
+    backgroundContainer.appendChild(layer2);
+    document.body.insertBefore(backgroundContainer, document.body.firstChild);
+
+    // Set initial background
+    layer1.style.backgroundImage = "url('/static/images/landingpage.gif')";
     
     const fantasyImages = [
         '/static/images/locations/fantasy/castle.webp',
@@ -182,10 +215,17 @@
             if (isTransitioning) return;
             isTransitioning = true;
             
+            const currentLayer = activeLayer === 0 ? layer1 : layer2;
+            const nextLayer = activeLayer === 0 ? layer2 : layer1;
+            
+            nextLayer.style.backgroundImage = `url('${url}')`;
+            
             requestAnimationFrame(() => {
-                document.body.style.transition = 'background-image 2s ease-in-out';
-                document.body.style.backgroundImage = `url('${url}')`;
+                currentLayer.classList.remove('active');
+                nextLayer.classList.add('active');
+                
                 setTimeout(() => {
+                    activeLayer = activeLayer === 0 ? 1 : 0;
                     isTransitioning = false;
                     resolve();
                 }, 2000);
