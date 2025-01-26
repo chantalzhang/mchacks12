@@ -3,17 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Test</title>
+    <title>Play MP4 Video</title>
     <link rel="stylesheet" href="../styles/videoGenTest.css">
+    <link rel="stylesheet" href="/static/styles/landing.css">
+    <style>
+        body {
+            background-image: url('/static/images/landingpage.gif');
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: 'Pixel', monospace;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Prevent scrollbars */
+        }
+        h1 {
+            text-align: center;
+            font-size: 2em;
+            position: absolute; /* Position title over video */
+            z-index: 10; /* Ensure title is above video */
+        }
+        .video-container {
+            position: fixed; /* Make video container fixed */
+            top: 0;
+            left: 0;
+            width: 100vw; /* Full viewport width */
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1; /* Ensure video is behind title */
+        }
+        video {
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            object-fit: cover; /* Cover the entire container */
+            object-position: center;
+        }
+        .tv-frame {
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            border: 20px solid #000; /* TV frame color */
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Shadow for depth */
+            overflow: hidden; /* Hide overflow */
+            position: relative; /* Position for button placement */
+        }
+        .button-container {
+            position: absolute; /* Position button at the bottom */
+            bottom: 20px; /* Space from the bottom */
+            left: 50%;
+            transform: translateX(-50%); /* Center the button */
+            z-index: 2; /* Ensure button is above video */
+        }
+        .next-scene-button {
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            background-color: #4e587f;
+            color: #fff;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-family: 'VCR', monospace;
+            text-transform: uppercase;
+        }
+        .next-scene-button:hover {
+            background-color: #5c84ae;
+            transform: scale(1.05);
+        }
+        .next-scene-button:active {
+            transform: scale(0.95);
+        }
+    </style>
 </head>
 <body>
     <div class="video-container">
-        <h1>Generated Video</h1>
-        <video autoplay muted loop>
-            <source src="../../McHacksVideo1.mp4" type="video/mp4">
-            Your browser does not support the video element.
-        </video>
+        <div class="tv-frame">
+            <video autoplay muted loop>
+                <source src="/static/videos/Scene0.mp4" type="video/mp4">
+                Your browser does not support the video element.
+            </video>
+        </div>
     </div>
-    <button class="next-button">Next</button>
+    <div class="button-container">
+        <button class="next-scene-button">Next Scene</button>
+    </div>
 </body>
 </html>
