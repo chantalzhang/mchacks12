@@ -25,6 +25,10 @@ def generate_video(prompt_text: str, video_number: int, model_type: str = "T2V-0
     print(f"Generating video for prompt: {prompt_text}")  # Log the prompt
     # Get the next available number and create filename
     output_path = f"videos/Scene{video_number}.mp4"
+    # Save the prompt to a text file
+    prompt_file = f"video_text/Scene{video_number}.txt"
+    with open(prompt_file, 'w') as f:
+        f.write(prompt_text)
 
     # Ensure the videos directory exists
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
@@ -84,6 +88,7 @@ def generate_video(prompt_text: str, video_number: int, model_type: str = "T2V-0
         print("Video download link：" + download_url)
         with open(output_path, 'wb') as f:
             f.write(requests.get(download_url).content)
+        # Save the prompt to a text file with same name as video
         print("The video has been downloaded in："+os.getcwd()+'/'+output_path)
 
     try:

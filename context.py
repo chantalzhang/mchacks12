@@ -6,13 +6,15 @@ class Context:
     def __init__(self, cfg_dict:dict):
         self._story_context = {
             "player": Player("alive", "start", "alive"), # swap to default
-            "npcs": [
-                
-            ],
+            "npcs": [],
             "major_story_events": [],
-
             "narrative_state": "exposition",
+            "npc_in_scene" : ""
         }
+        if "npc_in_scene" in cfg_dict:
+            self._story_context["npc_in_scene"] = cfg_dict["npc_in_scene"]
+        if "npcs" in cfg_dict:
+            self._story_context["npcs"] = cfg_dict["npcs"]
         if "player" in cfg_dict:
             self._story_context["player"] = Player(
                 cfg_dict["player"]["_status"],
@@ -32,6 +34,13 @@ class Context:
         else:
             self._story_context["init_theme"] = cfg_dict["init_theme"]
 
+    def update_npc_context(self, response:dict):
+        response_json = json.loads(response.choices[0].message.content)
+        res_context = response_json["context"]
+        if response_json["added_npc"] is not None:
+            self._story_context["npcs"].append(response_json["added_npc"])
+            self._story_context["npc_in_scene"] = res_context["npc_in_scene"]
+
     def update_context(self, response:dict):
         response_json = json.loads(response.choices[0].message.content)
         res_context = response_json["context"]
@@ -47,10 +56,6 @@ class Context:
         )
         # self._story_context["npcs"] = [NPC(npc_dict) for npc_dict in res_context["npcs"]]
         self._story_context["major_story_events"] = res_context["major_story_events"]
-
-
-    def add_NPC(self, npc_dict:dict):
-        self._story_context["npcs"].append(NPC(npc_dict))
 
 
     def unpack_context(self):
