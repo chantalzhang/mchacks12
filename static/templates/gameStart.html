@@ -35,7 +35,7 @@
         background-attachment: fixed;
         color: #fff;
         min-height: 100vh;
-        transition: background-image 1.5s ease-in-out;
+        transition: background-image 3s ease-in-out;
         will-change: background-image;
         -webkit-backface-visibility: hidden;
         -webkit-transform: translateZ(0);
@@ -85,10 +85,19 @@
         user-select: none;
         background-color: rgba(78, 88, 127, 0.3);
         color: #fff;
+        position: relative;
+        overflow: hidden;
     }
 
     .theme-option:hover {
         border-color: #5c84ae;
+        transform: scale(1.02);
+        background-color: rgba(78, 88, 127, 0.5);
+    }
+
+    .theme-option.selected {
+        border-color: #5c84ae;
+        background-color: rgba(92, 132, 174, 0.3);
         transform: scale(1.02);
     }
 
