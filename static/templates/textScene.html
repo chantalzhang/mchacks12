@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placeholder Background with Centered Text</title>
+  <link rel="stylesheet" href="/static/styles/textscene.css">
+</head>
+<body>
+  <div class="centered-text" id="sceneText" style="--scene-text: '{{ text_content }}';">
+  </div>
+
+  <script>
+    // Optional: If you need to update the text dynamically via JavaScript
+    function updateSceneText(newText) {
+      document.getElementById('sceneText').style.setProperty('--scene-text', `'${newText}'`);
+    }
+  </script>
+</body>
+</html>
