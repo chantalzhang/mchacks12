@@ -10,23 +10,41 @@ import datetime
 import threading
 import queue
 import atexit
+from videoGen import generate_video
 
 app = Flask(__name__, template_folder='static/templates')
 global context 
 
-# Create a queue for video generation requests
+# Create a queue for video generation tasks
 video_queue = queue.Queue()
+video_status = {}  # Dictionary to track video generation status
 
-def video_generation_worker():
+def video_worker():
     while True:
-        prompt_text = video_queue.get()
-        if prompt_text is None:  # Exit signal
+        task = video_queue.get()
+        if task is None:
             break
-        generate_video(prompt_text)  # Call your video generation function
-        video_queue.task_done()
+            
+        user_id, response_data = task
+        try:
+            with open("video_queue.log", "a") as logfile:
+                current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                logfile.write(f"[{current_time}] Processing video for response: {str(response_data)[:200]}...\n")
+                generate_video(response_data)
+            
+            video_status[user_id] = "completed"
+            
+        except Exception as e:
+            video_status[user_id] = "failed"
+            with open("video_queue.log", "a") as logfile:
+                logfile.write(f"[{current_time}] Error processing video: {str(e)}\n")
+        
+        finally:
+            video_queue.task_done()
 
-# Start the video generation worker thread
-threading.Thread(target=video_generation_worker, daemon=True).start()
+# Start worker thread
+worker_thread = threading.Thread(target=video_worker, daemon=True)
+worker_thread.start()
 
 @app.template_filter('from_json')
 def from_json(value):
@@ -115,19 +133,32 @@ def runGame():
             context = Context(init_dict)
             response = first_prompt(context)
             context.update_context(response)
-            return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content, hasNPC=True)
+            
+            # Queue video generation for initial response
+            message_content = json.loads(response.choices[0].message.content)["story_output"]
+            
+            video_queue.put(("init", message_content))
+            with open("video_queue.log", "a") as logfile:
+                current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                logfile.write(f"[{current_time}] Queued initial video generation\n")
+            
+            return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content)
         
         elif 'game_loop' in request.form:
             context = Context(json.loads(request.form['context_dict']))
             user_input = request.form['player_input']
             response = prompt_gpt(user_input, context)
             context.update_context(response)
-
-            # Get the narrator's text for video generation
-            narrator_text = response.choices[0].message.content
-            video_queue.put(narrator_text)  # Add the narrator text to the video generation queue
-
-            return render_template('gameRun.html', context=context.get_context(), response=narrator_text, hasNPC=True)
+            
+            # Queue video generation for each response
+            message_content = json.loads(response.choices[0].message.content)["story_output"]
+            
+            video_queue.put(("game_loop", message_content))
+            with open("video_queue.log", "a") as logfile:
+                current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                logfile.write(f"[{current_time}] Queued game loop video generation\n")
+            
+            return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content)
 
         elif 'game_end' in request.form:
             return render_template('gameVideo.html', context=context.get_context())
