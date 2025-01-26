@@ -7,9 +7,26 @@ import os
 from systemprompts import SystemPrompts
 import sys
 import datetime
+import threading
+import queue
+import atexit
 
 app = Flask(__name__, template_folder='static/templates')
 global context 
+
+# Create a queue for video generation requests
+video_queue = queue.Queue()
+
+def video_generation_worker():
+    while True:
+        prompt_text = video_queue.get()
+        if prompt_text is None:  # Exit signal
+            break
+        generate_video(prompt_text)  # Call your video generation function
+        video_queue.task_done()
+
+# Start the video generation worker thread
+threading.Thread(target=video_generation_worker, daemon=True).start()
 
 @app.template_filter('from_json')
 def from_json(value):
@@ -81,7 +98,7 @@ def endGame():
 def gameVideo():
     return render_template('gameVideo.html')
 
-@app.route('/gameRun', methods=['GET','POST'])
+@app.route('/gameRun', methods=['GET', 'POST'])
 def runGame():
     if request.method == 'POST':
         if 'first_init' in request.form:
@@ -94,22 +111,24 @@ def runGame():
             context = Context(init_dict)
             response = first_prompt(context)
             context.update_context(response)
-            return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content, hasNPC = True)
+            return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content, hasNPC=True)
+        
         elif 'game_loop' in request.form:
             context = Context(json.loads(request.form['context_dict']))
             user_input = request.form['player_input']
-            # with open("debug.log", "a") as logfile:
-            #     logfile.write(f"Context at {datetime.datetime.now()}: {str(context.get_context())}\n")
             response = prompt_gpt(user_input, context)
-            # with open("debug.log", "a") as logfile:
-            #     logfile.write(f"Response at {datetime.datetime.now()}: {str(response)}\n")
             context.update_context(response)
-            return render_template('gameRun.html', context = context.get_context(), response = response.choices[0].message.content, hasNPC = True)
-        elif 'game_end' in request.form:
-            return render_template('gameVideo.html', context = context.get_context())
-        
 
-    return render_template('gameRun.html', context = 'first_init' in request.form)
+            # Get the narrator's text for video generation
+            narrator_text = response.choices[0].message.content
+            video_queue.put(narrator_text)  # Add the narrator text to the video generation queue
+
+            return render_template('gameRun.html', context=context.get_context(), response=narrator_text, hasNPC=True)
+
+        elif 'game_end' in request.form:
+            return render_template('gameVideo.html', context=context.get_context())
+
+    return render_template('gameRun.html', context='first_init' in request.form)
     
 
 @app.route('/gameStart')
@@ -119,6 +138,9 @@ def startGame():
 @app.route('/')
 def home():
     return render_template('index.html')
+
+# To stop the video generation worker when the application exits
+atexit.register(lambda: video_queue.put(None))  # Send exit signal to the worker
 
 if __name__ == '__main__':
     app.run(debug=True)

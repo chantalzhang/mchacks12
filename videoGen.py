@@ -9,7 +9,7 @@ def get_next_video_number():
     """Find the next available video number by checking existing files"""
     i = 1
     while True:
-        if not os.path.exists(f"McHacksVideo{i}.mp4"):
+        if not os.path.exists(f"Scene{i}.mp4"):
             return i
         i += 1
 
@@ -22,9 +22,13 @@ def generate_video(prompt_text: str, model_type: str = "T2V-01") -> bool:
     Returns:
         bool: True if video generation was successful, False otherwise
     """
+    print(f"Generating video for prompt: {prompt_text}")  # Log the prompt
     # Get the next available number and create filename
     video_number = get_next_video_number()
-    output_path = f"McHacksVideo{video_number}.mp4"
+    output_path = f"videos/Scene{video_number}.mp4"
+
+    # Ensure the videos directory exists
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     def invoke_video_generation() -> str:
         print("-----------------Submit video generation task-----------------")
