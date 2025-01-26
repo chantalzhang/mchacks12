@@ -85,13 +85,21 @@
     <div class="video-container">
         <div class="tv-frame">
             <video autoplay muted loop>
-                <source src="/static/videos/Scene0.mp4" type="video/mp4">
+                <source src="{{path}}" type="video/mp4">
                 Your browser does not support the video element.
             </video>
         </div>
     </div>
+    <form id="nextSceneForm" action="/textScene" method="POST">
+        <input type="hidden" name="index" value="{{index}}">
+    </form>
     <div class="button-container">
-        <button class="next-scene-button">Next Scene</button>
+        <button class="next-scene-button" onclick="nextScene()">Next Scene</button>
     </div>
+    <script>
+        function nextScene() {
+            document.getElementById('nextSceneForm').submit();
+        }
+    </script>
 </body>
 </html>

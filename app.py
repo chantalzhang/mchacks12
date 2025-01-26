@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, current_app
+from flask import Flask, render_template, jsonify, request, current_app, redirect, url_for
 from context import Context
 import json
 from openai import OpenAI
@@ -13,6 +13,7 @@ import atexit
 from videoGen import generate_video
 from mappings import *
 import random
+import html
 
 app = Flask(__name__, template_folder='static/templates')
 global context 
@@ -158,15 +159,27 @@ def previewGameRun():
 def endGame():
     return render_template('gameEnd.html')
 
-@app.route('/textScene')
+@app.route('/textScene', methods=['GET', 'POST'])
 def textScene():
-    return render_template('textScene.html')
+    # Get index from number of text files
+    num = len([name for name in os.listdir('static/video_text') if name.endswith('.txt')])
+    index = request.form.get('index', 0, type=int)
+    if index == num:
+        return render_template('gameEnd.html')
+    with open(f"static/video_text/Scene{index}.txt", "r") as f:
+        fn = f.read()
+        fn = fn.split("CONTEXT:")[0]
+        
+        return render_template('textScene.html', text=fn, index=index)
+    
 
-@app.route('/gameVideo', methods=['GET'])
+@app.route('/gameVideo', methods=['GET', 'POST'])
 def game_video():
-    # Set the video source to Scene0.mp4
-    video_source = "/videos/Scene0.mp4"  # Adjust this path based on the actual location
-    return render_template('gameVideo.html', video_source=video_source)
+    index = request.form.get('index', 0, type=int)
+    path = f"static/videos/Scene{index}.mp4"
+    index += 1
+    return render_template('gameVideo.html', path=path, index=index)
+    
 
 @app.route('/gameRun', methods=['GET', 'POST'])
 def runGame():
@@ -305,7 +318,12 @@ def how_to_play():
 
 @app.route('/loading')
 def loading():
-    return render_template('loading.html')
+    if all(os.path.exists(f"static/video_text/Scene{i}.txt") == os.path.exists(f"static/videos/Scene{i}.mp4") for i in range(10)):
+        text_files = [open(f"static/video_text/Scene{i}.txt").read().split("CONTEXT:")[0] for i in range(10) if os.path.exists(f"static/video_text/Scene{i}.txt")]
+        video_paths = [f"static/videos/Scene{i}.mp4" for i in range(10) if os.path.exists(f"static/videos/Scene{i}.mp4")]
+        return redirect(url_for('textScene', index=0, _method='GET'))
+    else:
+        return render_template('loading.html')
 
 # Cleanup function to stop workers gracefully
 def cleanup_workers():

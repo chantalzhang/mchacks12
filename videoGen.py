@@ -14,7 +14,7 @@ def get_next_video_number():
         i += 1
 
 def generate_video(prompt_text: str, video_number: int, model_type: str = "T2V-01") -> bool:
-    prompt_file = f"video_text/Scene{video_number}.txt"
+    prompt_file = f"static/video_text/Scene{video_number}.txt"
     os.makedirs(os.path.dirname(prompt_file), exist_ok=True)
     with open(prompt_file, 'w') as f:
         f.write(prompt_text)
@@ -28,7 +28,7 @@ def generate_video(prompt_text: str, video_number: int, model_type: str = "T2V-0
     """
     print(f"Generating video for prompt: {prompt_text}")  # Log the prompt
     # Get the next available number and create filename
-    output_path = f"videos/Scene{video_number}.mp4"
+    output_path = f"static/videos/Scene{video_number}.mp4"
     # Ensure the videos directory exists
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 

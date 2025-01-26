@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Placeholder Background with Centered Text</title>
-  <link rel="stylesheet" href="/static/styles/textscene.css">
+  <link rel="stylesheet" href="static/styles/textscene.css">
   <style>
     body {
       margin: 0;
@@ -41,10 +41,9 @@
   </style>
 </head>
 <body>
-  <div class="narration-box" id="sceneText">
-  </div>
+  <div class="narration-box" id="narrationBox"></div>
   <div id="watchSceneButton">
-      <form action="/gameVideo" method="GET">
+      <form action="/gameVideo" method="POST">
           <button type="submit" class="button" style="
               padding: 1rem 2rem;
               font-size: 1.5rem;
@@ -60,36 +59,40 @@
               text-align: center;">
               Watch Scene
           </button>
+          <input type="hidden" name="index" value="{{index}}">
+          <div id="textin" style="display: none;">{{text}}</div>
       </form>
   </div>
 
   <script>
-    const textContent = "In a world where dreams collide with reality, heroes emerge to shape their destinies. Magic weaves through the air, ancient secrets lie buried, and forces beyond comprehension stir. Dragons soar above towering peaks, kingdoms rise and fall, and every choice carries the weight of legends. Beyond, the cosmos beckons with infinite possibilities. Stars shimmer in the void, alien worlds teem with wonder, and mysteries stretch into the unknown. Whether battling mystical forces or venturing into the vast reaches of space, every journey is unique, filled with challenges, triumphs, and unforgettable moments. Your story begins here—what will you choose?";
-    const sceneText = document.getElementById('sceneText');
+    const narrationBox = document.getElementById('narrationBox');
     const watchSceneButton = document.getElementById('watchSceneButton');
+    const textContent = document.getElementById('textin').innerHTML;  // Get first text file after cleaning list format
     let index = 0;
-    let typing = true; // Flag to check if typing is in progress
+    let typing = true;
 
     function typeText() {
       if (index < textContent.length && typing) {
-        sceneText.textContent += textContent.charAt(index);
+        narrationBox.textContent += textContent.charAt(index);
         index++;
-        setTimeout(typeText, 60); // Adjusted typing speed to be slower
+        setTimeout(typeText, 60);
       } else {
-        watchSceneButton.style.display = 'block'; // Show the button when done
+        watchSceneButton.style.display = 'block';
       }
     }
 
-    // Event listener to skip typing on Enter key press
     document.addEventListener('keydown', function(event) {
       if (event.key === 'Enter') {
-        typing = false; // Stop typing
-        sceneText.textContent = textContent; // Show full text
-        watchSceneButton.style.display = 'block'; // Show the button
+        typing = false;
+        narrationBox.textContent = textContent;
+        watchSceneButton.style.display = 'block';
       }
     });
 
-    typeText();
+    window.onload = function() {
+      narrationBox.textContent = '';  // Clear initial content
+      typeText();
+    };
   </script>
 </body>
 </html>
