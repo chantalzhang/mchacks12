@@ -18,6 +18,10 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: background-image 3s ease-in-out;
+            will-change: background-image;
+            -webkit-backface-visibility: hidden;
+            -webkit-transform: translateZ(0);
         }
 
         @font-face {
@@ -32,12 +36,14 @@
             padding: 20px;
             box-sizing: border-box;
             background-color: rgba(0, 0, 0, 0.3);
+            transition: all 1.5s ease-in-out;
         }
 
         .content-wrapper {
             display: flex;
             flex: 1;
             gap: 20px;
+            transition: all 1.5s ease-in-out;
         }
 
         .narration-box {
@@ -51,13 +57,14 @@
             line-height: 1.6;
             height: fit-content;
             max-height: 70vh;
-            transition: flex 0.3s ease;
+            transition: all 1.5s ease-in-out;
         }
 
         .character-space {
             display: none;
             flex: 0 0 50%;
-            transition: all 0.3s ease;
+            transition: all 1.5s ease-in-out;
+            opacity: 0;
         }
 
         .has-npc .narration-box {
@@ -66,6 +73,7 @@
 
         .has-npc .character-space {
             display: block;
+            opacity: 1;
         }
 
         .input-container {
@@ -166,16 +174,27 @@
         const gameContainer = document.getElementById('gameContainer');
         narrationBox.scrollTop = narrationBox.scrollHeight;
 
-        // Function to check for NPC presence and update layout
-        function updateLayout(hasNPC) {
-            if (hasNPC) {
-                gameContainer.classList.add('has-npc');
-            } else {
-                gameContainer.classList.remove('has-npc');
-            }
+        // Function to update theme with same transition timing
+        function updateTheme(theme) {
+            requestAnimationFrame(() => {
+                document.body.style.transition = 'background-image 3s ease-in-out';
+                document.body.style.backgroundImage = `url('/static/images/locations/${theme}/default.webp')`;
+            });
         }
 
-        // Example usage - call this when the context changes
+        // Function to check for NPC presence and update layout
+        function updateLayout(hasNPC) {
+            requestAnimationFrame(() => {
+                if (hasNPC) {
+                    gameContainer.classList.add('has-npc');
+                } else {
+                    gameContainer.classList.remove('has-npc');
+                }
+            });
+        }
+
+        // Example usage:
+        // updateTheme('{{ context.init_theme }}');
         // updateLayout({{ 'true' if context.npcs else 'false' }});
 
         // Submit form on enter

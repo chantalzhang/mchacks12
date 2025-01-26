@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How To Play - GAIA</title>
+    <style>
+        @font-face {
+            font-family: 'VCR';
+            src: url('/static/fonts/VCR_OSD_MONO_1.001.ttf') format('truetype');
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'VCR', monospace;
+            background-color: #2c2c2c;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .book-container {
+            background-color: #4a4a4a;
+            width: 80%;
+            max-width: 800px;
+            margin: 2rem;
+            padding: 3rem;
+            border: 8px solid #666;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .book-container::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px solid #777;
+            pointer-events: none;
+        }
+
+        .book-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #5c84ae;
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+        }
+
+        .book-content {
+            font-size: 1.2rem;
+            padding: 1rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            color: #5c84ae;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #5c84ae;
+            padding-bottom: 0.5rem;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            background-color: #4e587f;
+            color: #fff;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-family: 'VCR', monospace;
+            text-transform: uppercase;
+        }
+
+        .back-button:hover {
+            background-color: #5c84ae;
+            transform: scale(1.05);
+        }
+
+        .pixel-corner {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #666;
+        }
+
+        .pixel-corner.top-left { top: 0; left: 0; }
+        .pixel-corner.top-right { top: 0; right: 0; }
+        .pixel-corner.bottom-left { bottom: 0; left: 0; }
+        .pixel-corner.bottom-right { bottom: 0; right: 0; }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='/'">Back</button>
+    <div class="book-container">
+        <div class="pixel-corner top-left"></div>
+        <div class="pixel-corner top-right"></div>
+        <div class="pixel-corner bottom-left"></div>
+        <div class="pixel-corner bottom-right"></div>
+        
+        <h1 class="book-title">How To Play</h1>
+        
+        <div class="book-content">
+            <div class="section">
+                <h2 class="section-title">Getting Started</h2>
+                <p>Choose your adventure theme: Fantasy or Space. Each theme offers a unique storyline and setting for your journey.</p>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Gameplay</h2>
+                <p>Type your actions in the text input to interact with the world. Be descriptive and creative with your choices. Your decisions will shape the story and determine your fate.</p>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Commands</h2>
+                <p>Use natural language to describe your actions. For example:</p>
+                <ul>
+                    <li>"Explore the area"</li>
+                    <li>"Talk to the merchant"</li>
+                    <li>"Look for clues"</li>
+                    <li>"Hide behind the rocks"</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -7,6 +7,6 @@ startGameButton.addEventListener('click', () => {
 });
 
 howToPlayButton.addEventListener('click', () => {
-  // Redirect to the "How to Play" page
-  window.location.href = 'how-to-play.html';
+  // Redirect to the how-to-play route
+  window.location.href = '/howToPlay';
 });
