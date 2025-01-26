@@ -35,10 +35,11 @@
         background-attachment: fixed;
         color: #fff;
         min-height: 100vh;
-        transition: background-image 3s ease-in-out;
+        transition: background-image 2s ease-in-out;
         will-change: background-image;
         -webkit-backface-visibility: hidden;
-        -webkit-transform: translateZ(0);
+        -webkit-transform: translateZ(0) scale(1.0, 1.0);
+        background-color: black; /* Fallback color during transitions */
     }
 
     @font-face {
@@ -137,6 +138,7 @@
     let slideshowInterval;
     let currentImageIndex = 0;
     let currentTheme = null;
+    let isTransitioning = false;
     
     const fantasyImages = [
         '/static/images/locations/fantasy/cave.webp',
@@ -152,48 +154,58 @@
         '/static/images/locations/space/shiplookout.webp',
     ];
 
-    // Preload all images immediately when script loads
-    const preloadImages = (imageArray) => {
-        imageArray.forEach(src => {
+    // Preload images before showing them
+    const preloadImage = (src) => {
+        return new Promise((resolve, reject) => {
             const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
             img.src = src;
         });
     };
 
-    // Preload all image sets immediately
-    preloadImages(fantasyImages);
-    preloadImages(spaceImages);
+    // Preload all images on page load
+    Promise.all([
+        ...fantasyImages.map(preloadImage),
+        ...spaceImages.map(preloadImage)
+    ]).catch(console.error);
 
-    function startSlideshow(images) {
+    function setBackgroundImage(url) {
+        return new Promise((resolve) => {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            
+            requestAnimationFrame(() => {
+                document.body.style.transition = 'background-image 2s ease-in-out';
+                document.body.style.backgroundImage = `url('${url}')`;
+                setTimeout(() => {
+                    isTransitioning = false;
+                    resolve();
+                }, 2000);
+            });
+        });
+    }
+
+    async function startSlideshow(images) {
         if (slideshowInterval) {
             clearInterval(slideshowInterval);
         }
 
-        // First ensure smooth transition to first image
-        requestAnimationFrame(() => {
-            document.body.style.transition = 'background-image 3s ease-in-out';
-            document.body.style.backgroundImage = `url('${images[0]}')`;
-        });
+        // Set first image
+        await setBackgroundImage(images[0]);
+        currentImageIndex = 0;
         
-        // Wait for the initial transition to complete before starting slideshow
-        setTimeout(() => {
-            currentImageIndex = 0;
-            slideshowInterval = setInterval(() => {
-                currentImageIndex = (currentImageIndex + 1) % images.length;
-                requestAnimationFrame(() => {
-                    document.body.style.backgroundImage = `url('${images[currentImageIndex]}')`;
-                });
-            }, 6000);
-        }, 3000);
+        // Start the slideshow
+        slideshowInterval = setInterval(async () => {
+            if (isTransitioning) return;
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            await setBackgroundImage(images[currentImageIndex]);
+        }, 4000);
     }
 
-    function setTheme(theme) {
-        // If it's the same theme, don't restart the slideshow
-        if (theme === currentTheme) {
-            return;
-        }
+    async function setTheme(theme) {
+        if (theme === currentTheme || isTransitioning) return;
         
-        // Clear any existing slideshow
         if (slideshowInterval) {
             clearInterval(slideshowInterval);
         }
@@ -201,15 +213,10 @@
         document.getElementById(theme).checked = true;
         currentTheme = theme;
         
-        // Ensure transition is applied before changing theme
-        requestAnimationFrame(() => {
-            document.body.style.transition = 'background-image 3s ease-in-out';
-            
-            if (theme === 'fantasy') {
-                startSlideshow(fantasyImages);
-            } else if (theme === 'space') {
-                startSlideshow(spaceImages);
-            }
-        });
+        if (theme === 'fantasy') {
+            await startSlideshow(fantasyImages);
+        } else if (theme === 'space') {
+            await startSlideshow(spaceImages);
+        }
     }
 </script>
