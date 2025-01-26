@@ -168,17 +168,22 @@
         if (slideshowInterval) {
             clearInterval(slideshowInterval);
         }
-        
-        currentImageIndex = 0;
+
+        // First ensure smooth transition to first image
         requestAnimationFrame(() => {
-            document.body.style.backgroundImage = `url('${images[currentImageIndex]}')`;
+            document.body.style.transition = 'background-image 3s ease-in-out';
+            document.body.style.backgroundImage = `url('${images[0]}')`;
         });
         
-        slideshowInterval = setInterval(() => {
-            currentImageIndex = (currentImageIndex + 1) % images.length;
-            requestAnimationFrame(() => {
-                document.body.style.backgroundImage = `url('${images[currentImageIndex]}')`;
-            });
+        // Wait for the initial transition to complete before starting slideshow
+        setTimeout(() => {
+            currentImageIndex = 0;
+            slideshowInterval = setInterval(() => {
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                requestAnimationFrame(() => {
+                    document.body.style.backgroundImage = `url('${images[currentImageIndex]}')`;
+                });
+            }, 6000);
         }, 3000);
     }
 
@@ -188,13 +193,23 @@
             return;
         }
         
+        // Clear any existing slideshow
+        if (slideshowInterval) {
+            clearInterval(slideshowInterval);
+        }
+        
         document.getElementById(theme).checked = true;
         currentTheme = theme;
         
-        if (theme === 'fantasy') {
-            startSlideshow(fantasyImages);
-        } else if (theme === 'space') {
-            startSlideshow(spaceImages);
-        }
+        // Ensure transition is applied before changing theme
+        requestAnimationFrame(() => {
+            document.body.style.transition = 'background-image 3s ease-in-out';
+            
+            if (theme === 'fantasy') {
+                startSlideshow(fantasyImages);
+            } else if (theme === 'space') {
+                startSlideshow(spaceImages);
+            }
+        });
     }
 </script>
