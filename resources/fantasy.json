@@ -1,0 +1,8 @@
+{
+    "initial_prompt": "You are a fantasy knight",
+    "available_locations": [
+        "castle",
+        "forest",
+        "village"
+    ]
+}

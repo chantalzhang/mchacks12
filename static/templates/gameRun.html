@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAIA - Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'VCR', monospace;
+            background-image: url('/static/images/locations/fantasy/forest.webp');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @font-face {
+            font-family: 'VCR';
+            src: url('/static/fonts/VCR_OSD_MONO_1.001.ttf') format('truetype');
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+            gap: 20px;
+        }
+
+        .narration-box {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow-y: auto;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            height: fit-content;
+            max-height: 70vh;
+            transition: flex 0.3s ease;
+        }
+
+        .character-space {
+            display: none;
+            flex: 0 0 50%;
+            transition: all 0.3s ease;
+        }
+
+        .has-npc .narration-box {
+            flex: 0 0 50%;
+        }
+
+        .has-npc .character-space {
+            display: block;
+        }
+
+        .input-container {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prompt-symbol {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .player-input {
+            flex: 1;
+            padding: 15px;
+            font-size: 1.1rem;
+            background-color: rgba(78, 88, 127, 0.3);
+            border: 2px solid #4e587f;
+            border-radius: 8px;
+            color: #fff;
+            font-family: 'VCR', monospace;
+            box-sizing: border-box;
+        }
+
+        .player-input:focus {
+            outline: none;
+            border-color: #5c84ae;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4e587f;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5c84ae;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <div class="content-wrapper">
+            <div class="narration-box" id="narration">
+                Welcome to GAIA! You find yourself in a mysterious world...
+                <br><br>
+                [This is plappear here.he actual game content will appear here.he actual game content will appear hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.]
+                <br><br>
+                What would you like to do?
+            </div>
+            <div class="character-space" id="characterSpace">
+                <!-- Reserved space for character sprites -->
+            </div>
+        </div>
+        <div class="input-container">
+            <form id="playerForm" action="/gameRun" method="POST">
+                <div class="input-wrapper">
+                    <span class="prompt-symbol">&gt;</span>
+                    <input type="text" 
+                           class="player-input" 
+                           id="playerInput" 
+                           name="player_input" 
+                           placeholder="What do you do next?"
+                           autocomplete="off"
+                           autofocus>
+                </div>
+                <input type="hidden" name="game_loop" value="true">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Auto-scroll narration to bottom when new content is added
+        const narrationBox = document.getElementById('narration');
+        const gameContainer = document.getElementById('gameContainer');
+        narrationBox.scrollTop = narrationBox.scrollHeight;
+
+        // Function to check for NPC presence and update layout
+        function updateLayout(hasNPC) {
+            if (hasNPC) {
+                gameContainer.classList.add('has-npc');
+            } else {
+                gameContainer.classList.remove('has-npc');
+            }
+        }
+
+        // Example usage - call this when the context changes
+        // updateLayout({{ 'true' if context.npcs else 'false' }});
+
+        // Submit form on enter
+        document.getElementById('playerForm').addEventListener('submit', function(e) {
+            const input = document.getElementById('playerInput');
+            if (!input.value.trim()) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Focus input when clicking anywhere
+        document.addEventListener('click', function() {
+            document.getElementById('playerInput').focus();
+        });
+    </script>
+</body>
+</html>

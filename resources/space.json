@@ -1,0 +1,8 @@
+{
+    "initial_prompt": "You are a space astronaut",
+    "available_locations": [
+        "space station",
+        "moon",
+        "mars"
+    ]
+} 

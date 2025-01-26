@@ -1,0 +1,37 @@
+{
+    "user_input": "I want to investigate the church",
+    "current_context": {
+        "player": {
+            "status": "healthy",
+            "location": "town square",
+            "alive": true
+        },
+        "npcs": [
+            {
+                "class": "merchant",
+                "location": "market",
+                "nature": "friendly",
+                "status": "busy",
+                "alive": true
+            },
+            {
+                "class": "guard",
+                "location": "town gate",
+                "nature": "suspicious",
+                "status": "alert",
+                "alive": true
+            }
+        ],
+        "major_story_events": [
+            "Player arrived in the mysterious town",
+            "Met a suspicious guard at the gate",
+            "Discovered rumors of a curse from local merchant"
+        ],
+        "complete_story": "A traveler arrives in a mysterious town, immediately drawing the attention of a suspicious guard. While exploring the town square, they encounter a friendly merchant who shares disturbing rumors about a curse that befalls visitors who stay too long.",
+        "init_theme": {
+            "initial_prompt": "You find yourself in a mysterious medieval town shrouded in fog.",
+            "available_locations": ["town square", "market", "town gate", "inn", "dark alley", "church"]
+        },
+        "narrative_state": "exposition"
+    }
+}
