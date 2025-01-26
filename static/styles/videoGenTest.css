@@ -1,0 +1,55 @@
+.video-container {
+    max-width: 1750px;
+    margin: -110px auto 0;
+    padding: 0 20px;
+    overflow: hidden;
+}
+
+video {
+    width: 100%;
+    height: 100.5vh;
+    display: block;
+    margin: 0 auto;
+    object-fit: cover;
+    object-position: top;
+}
+
+/* Hide video controls */
+video::-webkit-media-controls {
+    display: none !important;
+}
+
+video::-webkit-media-controls-enclosure {
+    display: none !important;
+}
+
+.next-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    padding: 15px 30px;
+    background-color: #02135f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    z-index: 1000;
+}
+
+.next-button:hover {
+    background-color: #333333;
+    transform: scale(1.1);
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: black;
+}

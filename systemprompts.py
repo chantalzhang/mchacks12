@@ -24,7 +24,7 @@ class SystemPrompts:
             - major story events list should be updated to add the new story event
             - narrative_state must be set to "exposition"
         - added_npc: a JSON object that describes the newly created NPC with each of the fields populated. This field can be null.
-        The story_output should be a string that is a few sentences long. It should be the beginning of the story."""
+        The story_output should be a string that is around 100 wordslong. It should be the beginning of the story."""
     }
     
     MODEL_DEFINITION_RECURSE = {

@@ -94,7 +94,7 @@ def runGame():
             context = Context(init_dict)
             response = first_prompt(context)
             context.update_context(response)
-            return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content)
+            return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content, hasNPC = True)
         elif 'game_loop' in request.form:
             context = Context(json.loads(request.form['context_dict']))
             user_input = request.form['player_input']
@@ -104,7 +104,9 @@ def runGame():
             # with open("debug.log", "a") as logfile:
             #     logfile.write(f"Response at {datetime.datetime.now()}: {str(response)}\n")
             context.update_context(response)
-            return render_template('gameRun.html', context = context.get_context(), response = response.choices[0].message.content)
+            return render_template('gameRun.html', context = context.get_context(), response = response.choices[0].message.content, hasNPC = True)
+        elif 'game_end' in request.form:
+            return render_template('gameVideo.html', context = context.get_context())
         
 
     return render_template('gameRun.html', context = 'first_init' in request.form)
