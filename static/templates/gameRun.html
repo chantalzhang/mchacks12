@@ -193,9 +193,10 @@
                 {% set response_json = response|from_json %}
                 {{ response_json['story_output'] }}
                 <br><br><br>
-                {{ context }}
+                
             </div>
-            <div id="playerData" style="display: block;">{% set response_json = response|from_json %}{{response_json['context']['player']['_alive']}}</div>
+            <div id="hiddencontext" style="display: none;">{{ context }}</div>
+            <div id="playerData" style="display: none;">{% set response_json = response|from_json %}{{response_json['context']['player']['_alive']}}</div>
             <div class="character-space" id="characterSpace">
                 {% if hasNPC %}
                     <div class="npc-image">
@@ -246,6 +247,8 @@
     </div>
 
     <script>
+
+        console.log(document.getElementById('hiddencontext').innerHTML)
 
         
 
