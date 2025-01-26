@@ -142,7 +142,7 @@ def runGame():
                 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 logfile.write(f"[{current_time}] Queued initial video generation\n")
             
-            return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content)
+            return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content, hasNPC = True)
         
         elif 'game_loop' in request.form:
             context = Context(json.loads(request.form['context_dict']))
@@ -158,7 +158,7 @@ def runGame():
                 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 logfile.write(f"[{current_time}] Queued game loop video generation\n")
             
-            return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content)
+            return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content, hasNPC = True)
 
         elif 'game_end' in request.form:
             return render_template('gameVideo.html', context=context.get_context())
