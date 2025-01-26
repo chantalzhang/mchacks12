@@ -17,6 +17,7 @@
       align-items: center;
       min-height: 100vh;
       position: relative;
+      flex-direction: column; /* Stack elements vertically */
     }
 
     .narration-box {
@@ -31,24 +32,62 @@
       color: #e6e0e0cd; /* Light gray text color */
       transition: all 1.5s ease-in-out;
     }
+
+    #watchSceneButton {
+      text-align: center; 
+      margin-top: 20px; 
+      display: none; /* Initially hidden */
+    }
   </style>
 </head>
 <body>
   <div class="narration-box" id="sceneText">
   </div>
+  <div id="watchSceneButton">
+      <form action="/gameVideo" method="GET">
+          <button type="submit" class="button" style="
+              padding: 1rem 2rem;
+              font-size: 1.5rem;
+              background-color: #4e587f;
+              color: #fff;
+              border: none;
+              border-radius: 0.5rem;
+              cursor: pointer;
+              transition: background-color 0.3s ease, transform 0.3s ease;
+              font-family: 'VCR', monospace;
+              text-transform: uppercase;
+              min-width: 200px;
+              text-align: center;">
+              Watch Scene
+          </button>
+      </form>
+  </div>
 
   <script>
     const textContent = "In a world where dreams collide with reality, heroes emerge to shape their destinies. Magic weaves through the air, ancient secrets lie buried, and forces beyond comprehension stir. Dragons soar above towering peaks, kingdoms rise and fall, and every choice carries the weight of legends. Beyond, the cosmos beckons with infinite possibilities. Stars shimmer in the void, alien worlds teem with wonder, and mysteries stretch into the unknown. Whether battling mystical forces or venturing into the vast reaches of space, every journey is unique, filled with challenges, triumphs, and unforgettable moments. Your story begins here—what will you choose?";
     const sceneText = document.getElementById('sceneText');
+    const watchSceneButton = document.getElementById('watchSceneButton');
     let index = 0;
+    let typing = true; // Flag to check if typing is in progress
 
     function typeText() {
-      if (index < textContent.length) {
+      if (index < textContent.length && typing) {
         sceneText.textContent += textContent.charAt(index);
         index++;
         setTimeout(typeText, 60); // Adjusted typing speed to be slower
+      } else {
+        watchSceneButton.style.display = 'block'; // Show the button when done
       }
     }
+
+    // Event listener to skip typing on Enter key press
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        typing = false; // Stop typing
+        sceneText.textContent = textContent; // Show full text
+        watchSceneButton.style.display = 'block'; // Show the button
+      }
+    });
 
     typeText();
   </script>
