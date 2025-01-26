@@ -55,4 +55,6 @@ class FantasyNPCMap:
         "student": "/static/images/npc/fantasy/witch.webp",
         "king": "/static/images/npc/fantasy/fatking.webp",
 
+
     }
+
