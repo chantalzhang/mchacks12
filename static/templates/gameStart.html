@@ -11,8 +11,8 @@
                 
                 <div class="theme-option" onclick="setTheme('space')">
                     <input type="radio" id="space" name="initial_theme" value="space" required>
-                    <label for="space">Space Future</label>
-                    <p>Explore the cosmos among the stars and uncover the endless mysteries of the universe.<p>
+                    <label for="space">Space</label>
+                    <p>Explore the cosmos among the stars and uncover the endless mysteries of the vast universe.</p>
                 </div>
                 <input type="hidden" name="first_init" value="true">
             </div>
@@ -79,6 +79,11 @@
         color: #fff;
         position: relative;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
     }
 
     .theme-option:hover {
@@ -89,8 +94,8 @@
 
     .theme-option.selected {
         border-color: #5c84ae;
-        background-color: rgba(92, 132, 174, 0.3);
-        transform: scale(1.02);
+        background-color: rgba(92, 132, 174, 0.7);
+        transform: scale(1.05);
     }
 
     .theme-option p {
@@ -150,6 +155,11 @@
     .background-layer.active {
         opacity: 1;
     }
+
+    /* Hide the radio buttons */
+    input[type="radio"] {
+        display: none; /* Hides the radio button */
+    }
 </style>
 
 <script>
@@ -171,10 +181,10 @@
     document.body.insertBefore(backgroundContainer, document.body.firstChild);
 
     // Set initial background
-    layer1.style.backgroundImage = "url('/static/images/landingpage.gif')";
+    layer1.style.backgroundImage = "url('static/images/landingpage.gif')";
     
     const fantasyImages = [
-        '/static/images/locations/fantasy/castle.webp',
+        '/static/images/locations/fantasy/castle_lobby.webp',
         '/static/images/locations/fantasy/forest_swamp.webp',
         '/static/images/locations/fantasy/cave.webp',
         '/static/images/locations/fantasy/castle_dungeon.webp',
@@ -184,14 +194,14 @@
     ];
     
     const spaceImages = [
-        '/static/images/locations/space/homeship.webp',
-        '/static/images/locations/space/shiplookout.webp',
-        '/static/images/locations/space/moon.webp',
-        '/static/images/locations/space/darkplanet.webp',
-        '/static/images/locations/space/alientropic.webp',
-        '/static/images/locations/space/frozenplanet.webp',
-        '/static/images/locations/space/desert.webp',
-        '/static/images/locations/space/space.webp',
+        'static/images/locations/space/homeship.webp',
+        'static/images/locations/space/shiplookout.webp',
+        'static/images/locations/space/moon.webp',
+        'static/images/locations/space/darkplanet.webp',
+        'static/images/locations/space/alientropic.webp',
+        'static/images/locations/space/frozenplanet.webp',
+        'static/images/locations/space/desert.webp',
+        'static/images/locations/space/space.webp',
     ];
 
     // Preload images before showing them
@@ -259,8 +269,17 @@
             clearInterval(slideshowInterval);
         }
         
+        // Uncheck all radio buttons and remove the selected class from all theme options
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+
         document.getElementById(theme).checked = true;
         currentTheme = theme;
+
+        // Add the selected class to the current theme option
+        const selectedOption = document.querySelector(`.theme-option[onclick="setTheme('${theme}')"]`);
+        selectedOption.classList.add('selected');
         
         if (theme === 'fantasy') {
             await startSlideshow(fantasyImages);

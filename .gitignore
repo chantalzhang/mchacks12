@@ -22,3 +22,5 @@ build/
 
 # Video queue log
 video_queue.log
+json_debug.log
+mode.txt

@@ -12,6 +12,7 @@ import queue
 import atexit
 from videoGen import generate_video
 from mappings import *
+import random
 
 app = Flask(__name__, template_folder='static/templates')
 global context 
@@ -148,16 +149,23 @@ def runGame():
             initial_theme = request.form['initial_theme']
             match initial_theme:
                 case "fantasy":
-                    init_dict = json.load(open("resources/fantasy.json"))
-                    init_dict["available_npcs"] = FantasyNPCMap.MAP.keys()
-                    init_dict["available_locations"] = FantasyLocationMap.MAP.keys()
+                    init_dict = {}
+                    init_dict["available_npcs"] = list(FantasyNPCMap.MAP.keys())
+                    init_dict["available_locations"] = list(FantasyLocationMap.MAP.keys())
+                    init_dict["initial_prompt"] = f"Fantasy adventure starting in {random.choice(init_dict['available_locations'])}, conflict, "
+                    with open("mode.txt", "w") as f:
+                        f.write("fantasy")
                 case "space":
-                    init_dict = json.load(open("resources/space.json"))
-                    init_dict["available_npcs"] = SpaceNPCMap.MAP.keys()
-                    init_dict["available_locations"] = SpaceLocationMap.MAP.keys()
+                    init_dict = {}
+                    init_dict["available_npcs"] = list(SpaceNPCMap.MAP.keys())
+                    init_dict["available_locations"] = list(SpaceLocationMap.MAP.keys())
+                    init_dict["initial_prompt"] = f"Space adventure starting in {random.choice(init_dict['available_locations'])}, conflict, "
+                    with open("mode.txt", "w") as f:
+                        f.write("space")
             context = Context(init_dict)
             response = first_prompt(context)
             context.update_context(response)
+            context.update_npc_context(response)
             
             # Queue video generation for initial response
             message_content = json.loads(response.choices[0].message.content)["story_output"]
@@ -167,13 +175,44 @@ def runGame():
             #     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             #     logfile.write(f"[{current_time}] Queued initial video generation\n")
             
-            return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content, hasNPC = True)
+            with open("mode.txt", "r") as f:
+                mode = f.read()
+            if mode == "fantasy":
+                npc_map = FantasyNPCMap.MAP
+                location_map = FantasyLocationMap.MAP
+            elif mode == "space":
+                npc_map = SpaceNPCMap.MAP
+                location_map = SpaceLocationMap.MAP
+
+            res_context = json.loads(response.choices[0].message.content)["context"]
+            location_img = location_map[res_context["player"]["_location"]]
+            npc_description = ""
+            
+            if res_context['npc_in_scene'] != "":
+                npc_img = npc_map[res_context['npc_in_scene']]
+                for npc_dict in res_context['npcs']:
+                    npc_description = npc_dict['_description'] if npc_dict['_class'] == res_context['npc_in_scene'] else ""
+                    hasNPC = True
+                    break
+                hasNPC = True
+            else:
+                npc_img = ""
+                hasNPC = False
+
+            return render_template('gameRun.html',
+                                    context=context.get_context(),
+                                    response=response.choices[0].message.content,
+                                    location_img=location_img,
+                                    npc_img=npc_img,
+                                    hasNPC=hasNPC,
+                                    npc_description=npc_description)
         
         elif 'game_loop' in request.form:
             context = Context(json.loads(request.form['context_dict']))
             user_input = request.form['player_input']
             response = prompt_gpt(user_input, context)
             context.update_context(response)
+            context.update_npc_context(response)
             
             # Queue video generation for each response
             message_content = json.loads(response.choices[0].message.content)["story_output"]
@@ -182,8 +221,37 @@ def runGame():
             # with open("video_queue.log", "a") as logfile:
             #     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             #     logfile.write(f"[{current_time}] Queued game loop video generation\n")
+            with open("mode.txt", "r") as f:
+                mode = f.read()
+            if mode == "fantasy":
+                npc_map = FantasyNPCMap.MAP
+                location_map = FantasyLocationMap.MAP
+            elif mode == "space":
+                npc_map = SpaceNPCMap.MAP
+                location_map = SpaceLocationMap.MAP
+
+            res_context = json.loads(response.choices[0].message.content)["context"]
+            location_img = location_map[res_context["player"]["_location"]]
+            npc_description = ""
             
-            return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content, hasNPC = True)
+            if res_context['npc_in_scene'] != "":
+                npc_img = npc_map[res_context['npc_in_scene']]
+                for npc_dict in res_context['npcs']:
+                    npc_description = npc_dict['_description'] if npc_dict['_class'] == res_context['npc_in_scene'] else ""
+                    hasNPC = True
+                    break
+                hasNPC = True
+            else:
+                npc_description = ""
+                npc_img = ""
+                hasNPC = False
+            return render_template('gameRun.html',
+                                    context=context.get_context(),
+                                    response=response.choices[0].message.content,
+                                    location_img=location_img,
+                                    npc_img=npc_img,
+                                    hasNPC=hasNPC,
+                                    npc_description=npc_description)
 
     return render_template('gameRun.html', context='first_init' in request.form)
 
@@ -194,6 +262,10 @@ def startGame():
 @app.route('/')
 def home():
     return render_template('index.html')
+
+@app.route('/howToPlay')
+def how_to_play():
+    return render_template('howToPlay.html')
 
 # Cleanup function to stop workers gracefully
 def cleanup_workers():
