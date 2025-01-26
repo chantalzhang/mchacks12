@@ -193,13 +193,14 @@
                 {% set response_json = response|from_json %}
                 {{ response_json['story_output'] }}
                 <br><br><br>
-                {{ context }}
+                
             </div>
-            <div id="playerData" style="display: block;">{% set response_json = response|from_json %}{{response_json['context']['player']['_alive']}}</div>
+            <div id="hiddencontext" style="display: none;">{{ context }}</div>
+            <div id="playerData" style="display: none;">{% set response_json = response|from_json %}{{response_json['context']['player']['_alive']}}</div>
             <div class="character-space" id="characterSpace">
                 {% if hasNPC %}
                     <div class="npc-image">
-                        <img src="/static/images/npc/fantasy/wiseman.png" alt="NPC" style="width: 100%; height: auto;">
+                        <img src="/static/images/npc/fantasy/mushroom.png" alt="NPC" style="width: 100%; height: auto;">
                         <div class="npc-description">
                             I am the wizard of the forest, here to guide you on your journey through magic and mystery.
                         </div>
@@ -246,6 +247,8 @@
     </div>
 
     <script>
+
+        console.log(document.getElementById('hiddencontext').innerHTML)
 
         
 
