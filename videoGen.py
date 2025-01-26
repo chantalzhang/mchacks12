@@ -103,4 +103,4 @@ def generate_video(prompt_text: str, model_type: str = "T2V-01") -> bool:
 if __name__ == '__main__':
     # Example usage when running the file directly
     # When no prompt is provided, the default prompt is used
-    generate_video("A beautiful sunset over the ocean")
+    generate_video("Hiccup is riding his dragon Toothless into the sunset. Around beautiful mountains and a clear blue sky. He smiles as the wind blows through his hair. He pulls out his sword and raises it to the sky as he cheers. The camera zooms in on his face as he smiles. The camera then pans out to show the entire scene. ")
