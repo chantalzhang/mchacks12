@@ -16,18 +16,28 @@ import random
 
 app = Flask(__name__, template_folder='static/templates')
 global context 
-
-# Create a queue for video generation tasks
-video_queue = queue.Queue()
+MAX_WORKERS = 6
+# Create multiple queues for video generation tasks
+video_queues = [queue.Queue() for _ in range(MAX_WORKERS)]
 video_status = {}  # Dictionary to track video generation status
-MAX_WORKERS = 5  # Maximum number of concurrent threads
+current_queue = 0  # For round-robin distribution
+
+# Add a lock for the job counter
+job_counter_lock = threading.Lock()
+job_counter = 0
+
+# Add a lock for the current_queue counter
+queue_lock = threading.Lock()
+
+# Add a lock for the video_status dictionary
+video_status_lock = threading.Lock()
 
 def video_worker(worker_id):
+    global job_counter
     while True:
         try:
-            task = video_queue.get(timeout=60)  # Wait up to 60 seconds for new tasks
+            task = video_queues[worker_id].get(timeout=360)
         except queue.Empty:
-            # If no tasks received in 60 seconds, exit thread
             with open("video_queue.log", "a") as logfile:
                 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 thread_id = threading.current_thread().ident
@@ -43,22 +53,38 @@ def video_worker(worker_id):
                 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 thread_id = threading.current_thread().ident
                 logfile.write(f"[{current_time}] Worker {worker_id} (Thread ID: {thread_id}) processing video for response: {str(response_data)[:200]}...\n")
-                generate_video(response_data, worker_id)
+                
+                # Use lock when accessing job_counter
+                with job_counter_lock:
+                    job_id = job_counter
+                    job_counter += 1
+                    
+                generate_video(response_data, job_id)
             
-            video_status[user_id] = "completed"
+            with video_status_lock:
+                video_status[user_id] = "completed"
             
         except Exception as e:
-            video_status[user_id] = "failed"
+            with video_status_lock:
+                video_status[user_id] = "failed"
             with open("video_queue.log", "a") as logfile:
                 thread_id = threading.current_thread().ident
                 logfile.write(f"[{current_time}] Worker {worker_id} (Thread ID: {thread_id}) error processing video: {str(e)}\n")
         
         finally:
-            video_queue.task_done()
+            video_queues[worker_id].task_done()
             with open("video_queue.log", "a") as logfile:
                 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 thread_id = threading.current_thread().ident
                 logfile.write(f"[{current_time}] Worker {worker_id} (Thread ID: {thread_id}) completed task\n")
+
+def add_to_queue(user_id, response_data):
+    global current_queue
+    video_queues[current_queue].put((user_id, response_data))
+    with open("video_queue.log", "a") as logfile:
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        logfile.write(f"[{current_time}] Added task to queue {current_queue}\n")
+    current_queue = (current_queue + 1) % MAX_WORKERS
 
 # Create thread pool
 thread_pool = []
@@ -168,12 +194,17 @@ def runGame():
             context.update_npc_context(response)
             
             # Queue video generation for initial response
-            message_content = json.loads(response.choices[0].message.content)["story_output"]
-            
-            # video_queue.put(("init", message_content))
-            # with open("video_queue.log", "a") as logfile:
-            #     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            #     logfile.write(f"[{current_time}] Queued initial video generation\n")
+            message_content = json.loads(response.choices[0].message.content)
+            story_output = message_content["story_output"]
+            ctxt = message_content["context"]
+            past_events = ctxt["major_story_events"]
+            past_events_string = ", ".join(past_events)
+            input_string = story_output + "CONTEXT: " +past_events_string
+
+            add_to_queue("init", input_string)
+            with open("video_queue.log", "a") as logfile:
+                current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                logfile.write(f"[{current_time}] Queued initial video generation\n")
             
             with open("mode.txt", "r") as f:
                 mode = f.read()
@@ -215,12 +246,17 @@ def runGame():
             context.update_npc_context(response)
             
             # Queue video generation for each response
-            message_content = json.loads(response.choices[0].message.content)["story_output"]
+            message_content = json.loads(response.choices[0].message.content)
+            story_output = message_content["story_output"]
+            ctxt = message_content["context"]
+            past_events = ctxt["major_story_events"]
+            past_events_string = ", ".join(past_events)
+            input_string = story_output + "CONTEXT: " +past_events_string
             
-            # video_queue.put(("game_loop", message_content))
-            # with open("video_queue.log", "a") as logfile:
-            #     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            #     logfile.write(f"[{current_time}] Queued game loop video generation\n")
+            add_to_queue("game_loop", input_string)
+            with open("video_queue.log", "a") as logfile:
+                current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                logfile.write(f"[{current_time}] Queued game loop video generation\n")
             with open("mode.txt", "r") as f:
                 mode = f.read()
             if mode == "fantasy":
@@ -271,7 +307,7 @@ def how_to_play():
 def cleanup_workers():
     # Signal all workers to stop
     for _ in range(MAX_WORKERS):
-        video_queue.put(None)
+        video_queues[_].put(None)
     
     # Wait for all workers to finish
     for worker in thread_pool:
