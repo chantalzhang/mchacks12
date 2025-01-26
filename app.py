@@ -135,9 +135,11 @@ def endGame():
 def textScene():
     return render_template('textScene.html')
 
-@app.route('/gameVideo')
-def gameVideo():
-    return render_template('gameVideo.html')
+@app.route('/gameVideo', methods=['GET'])
+def game_video():
+    # Set the video source to Scene0.mp4
+    video_source = "/videos/Scene0.mp4"  # Adjust this path based on the actual location
+    return render_template('gameVideo.html', video_source=video_source)
 
 @app.route('/gameRun', methods=['GET', 'POST'])
 def runGame():
