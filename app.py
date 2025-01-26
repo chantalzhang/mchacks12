@@ -131,6 +131,10 @@ def previewGameRun():
 def endGame():
     return render_template('gameEnd.html')
 
+@app.route('/textScene')
+def textScene():
+    return render_template('textScene.html')
+
 @app.route('/gameVideo')
 def gameVideo():
     return render_template('gameVideo.html')

@@ -5,16 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Placeholder Background with Centered Text</title>
   <link rel="stylesheet" href="/static/styles/textscene.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'VCR', monospace; /* Match font from gameRun.html */
+      background-color: #2c2c2c;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .narration-box {
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 0 20px; /* Add margin to prevent full width */
+      max-width: 600px; /* Set a max width for the box */
+      text-align: center;
+      font-size: 1.2rem; /* Match font size from gameRun.html */
+      line-height: 1.6;
+      color: #e6e0e0cd; /* Light gray text color */
+      transition: all 1.5s ease-in-out;
+    }
+  </style>
 </head>
 <body>
-  <div class="centered-text" id="sceneText" style="--scene-text: '{{ text_content }}';">
+  <div class="narration-box" id="sceneText">
   </div>
 
   <script>
-    // Optional: If you need to update the text dynamically via JavaScript
-    function updateSceneText(newText) {
-      document.getElementById('sceneText').style.setProperty('--scene-text', `'${newText}'`);
+    const textContent = "In a world where dreams collide with reality, heroes emerge to shape their destinies. Magic weaves through the air, ancient secrets lie buried, and forces beyond comprehension stir. Dragons soar above towering peaks, kingdoms rise and fall, and every choice carries the weight of legends. Beyond, the cosmos beckons with infinite possibilities. Stars shimmer in the void, alien worlds teem with wonder, and mysteries stretch into the unknown. Whether battling mystical forces or venturing into the vast reaches of space, every journey is unique, filled with challenges, triumphs, and unforgettable moments. Your story begins here—what will you choose?";
+    const sceneText = document.getElementById('sceneText');
+    let index = 0;
+
+    function typeText() {
+      if (index < textContent.length) {
+        sceneText.textContent += textContent.charAt(index);
+        index++;
+        setTimeout(typeText, 60); // Adjusted typing speed to be slower
+      }
     }
+
+    typeText();
   </script>
 </body>
 </html>
