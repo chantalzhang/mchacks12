@@ -148,9 +148,11 @@ def runGame():
                 case "fantasy":
                     init_dict = json.load(open("resources/fantasy.json"))
                     init_dict["available_npcs"] = FantasyNPCMap.MAP.keys()
+                    init_dict["available_locations"] = FantasyLocationMap.MAP.keys()
                 case "space":
                     init_dict = json.load(open("resources/space.json"))
                     init_dict["available_npcs"] = SpaceNPCMap.MAP.keys()
+                    init_dict["available_locations"] = SpaceLocationMap.MAP.keys()
             context = Context(init_dict)
             response = first_prompt(context)
             context.update_context(response)
@@ -158,10 +160,10 @@ def runGame():
             # Queue video generation for initial response
             message_content = json.loads(response.choices[0].message.content)["story_output"]
             
-            video_queue.put(("init", message_content))
-            with open("video_queue.log", "a") as logfile:
-                current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                logfile.write(f"[{current_time}] Queued initial video generation\n")
+            # video_queue.put(("init", message_content))
+            # with open("video_queue.log", "a") as logfile:
+            #     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            #     logfile.write(f"[{current_time}] Queued initial video generation\n")
             
             return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content)
         
@@ -174,10 +176,10 @@ def runGame():
             # Queue video generation for each response
             message_content = json.loads(response.choices[0].message.content)["story_output"]
             
-            video_queue.put(("game_loop", message_content))
-            with open("video_queue.log", "a") as logfile:
-                current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                logfile.write(f"[{current_time}] Queued game loop video generation\n")
+            # video_queue.put(("game_loop", message_content))
+            # with open("video_queue.log", "a") as logfile:
+            #     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            #     logfile.write(f"[{current_time}] Queued game loop video generation\n")
             
             return render_template('gameRun.html', context=context.get_context(), response=response.choices[0].message.content)
 
