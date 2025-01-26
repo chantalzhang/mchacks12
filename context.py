@@ -7,7 +7,7 @@ class Context:
         self._story_context = {
             "player": Player("alive", "start", "alive"), # swap to default
             "npcs": [
-                #initialize default npc that cannot appear only for reference
+                
             ],
             "major_story_events": [],
 
@@ -26,7 +26,8 @@ class Context:
         if "init_theme" not in cfg_dict:
             self._story_context["init_theme"] = {
                 "initial_prompt": cfg_dict["initial_prompt"],
-                "available_locations": cfg_dict["available_locations"]
+                "available_locations": cfg_dict["available_locations"],
+                "available_npcs": cfg_dict["available_npcs"]
             }
         else:
             self._story_context["init_theme"] = cfg_dict["init_theme"]

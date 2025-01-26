@@ -13,7 +13,7 @@ def get_next_video_number():
             return i
         i += 1
 
-def generate_video(prompt_text: str, model_type: str = "T2V-01") -> bool:
+def generate_video(prompt_text: str, video_number: int, model_type: str = "T2V-01") -> bool:
     """
     Generate a video using the Minimax API
     Args:
@@ -24,7 +24,6 @@ def generate_video(prompt_text: str, model_type: str = "T2V-01") -> bool:
     """
     print(f"Generating video for prompt: {prompt_text}")  # Log the prompt
     # Get the next available number and create filename
-    video_number = get_next_video_number()
     output_path = f"videos/Scene{video_number}.mp4"
 
     # Ensure the videos directory exists
