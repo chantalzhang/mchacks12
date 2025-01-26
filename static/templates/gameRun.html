@@ -131,18 +131,20 @@
     <div class="game-container" id="gameContainer">
         <div class="content-wrapper">
             <div class="narration-box" id="narration">
-                Welcome to GAIA! You find yourself in a mysterious world...
-                <br><br>
-                [This is plappear here.he actual game content will appear here.he actual game content will appear hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.hll appear here.he actual game content will appear here.here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.he actual game content will appear here.]
-                <br><br>
-                What would you like to do?
+                {% set response_json = response|from_json %}
+                {{response_json['story_output']}}
+                <br><br><br>
+                {{context}}
             </div>
             <div class="character-space" id="characterSpace">
                 <!-- Reserved space for character sprites -->
             </div>
         </div>
+
         <div class="input-container">
             <form id="playerForm" action="/gameRun" method="POST">
+                <input type="hidden" name="game_loop" value="true">
+                <input type="hidden" name="context_dict" value="{{context}}">
                 <div class="input-wrapper">
                     <span class="prompt-symbol">&gt;</span>
                     <input type="text" 
