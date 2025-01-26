@@ -5,15 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GAIA</title>
   <link rel="stylesheet" href="/static/styles/gameEnd.css">
+  <style>
+    @font-face {
+      font-family: 'VCR';
+      src: url('/static/fonts/VCR_OSD_MONO_1.001.ttf') format('truetype');
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'VCR', monospace;
+      background-color: #2c2c2c; /* Fallback color */
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh; /* Full height of the viewport */
+      position: relative; /* Position relative for overlay */
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); /* Black transparent overlay */
+      z-index: 1; /* Ensure overlay is below text */
+    }
+
+    .container {
+      text-align: center; /* Center text */
+      z-index: 2; /* Ensure content is above overlay */
+    }
+
+    .game-title {
+      font-size: 5rem; /* Increased font size */
+      margin-bottom: 3rem; /* Increased space below the title */
+      margin-top: -10%; /* Position higher on the screen */
+    }
+
+    .button-container {
+      margin-top: 1rem; /* Space above the button */
+    }
+
+    .button {
+      padding: 1rem 2rem;
+      font-size: 1.5rem; /* Increased button font size */
+      background-color: #44343f;
+      color: #fff;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      font-family: 'VCR', monospace;
+      text-transform: uppercase;
+    }
+
+    .button:hover {
+      background-color: #5c84ae;
+      transform: scale(1.05);
+    }
+  </style>
 </head>
 <body>
+  <div class="overlay"></div> <!-- Dark overlay -->
   <div class="container">
     <h1 class="game-title">GAME OVER</h1>
     <div class="button-container">
-      <a href="/gameStart"><button class="button start-game">Return Home</button></a>
-      <button class="button how-to-play">Themes</button>
+      <a href="/"><button class="button">Return Home</button></a>
     </div>
   </div>
-  <script src="/static/scripts/landing.js"></script>
 </body>
 </html>
