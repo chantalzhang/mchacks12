@@ -7,7 +7,8 @@ class SpaceLocationMap:
         "frozen_planet": "/static/images/locations/space/frozenplanet.webp",
         "desert_planet": "/static/images/locations/space/desert.webp",
         "lush_planet": "/static/images/locations/space/alientropic.webp",
-        "dark_planet": "/static/images/locations/space/darkplanet.webp"
+        "dark_planet": "/static/images/locations/space/darkplanet.webp",
+        "escape_pod": "/static/images/locations/space/escapepod.webp"
     }
 class FantasyLocationMap:
     MAP = {
@@ -20,14 +21,13 @@ class FantasyLocationMap:
         "forest": "/static/images/locations/fantasy/forest.webp",
         "sky": "/static/images/locations/fantasy/sky.webp",
         "forest_castle": "/static/images/locations/fantasy/forest.webp",
+        "dragon_lair": "/static/images/locations/fantasy/dragonlair.webp"
     }
 
 class SpaceNPCMap:
     MAP = {
-        "mysterious_woman": "/static/images/npcs/space/change.png",
         "beautiful_woman": "/static/images/npcs/space/change.png",
         "moon_goddess": "/static/images/npcs/space/change.png",
-        "demon": "/static/images/npcs/space/demon.png",
         "monster": "/static/images/npcs/space/demon.png",
         "hostile_alien": "/static/images/npcs/space/demon.png",
         "friendly_space_cat": "/static/images/npcs/space/spacecat.png",
@@ -38,7 +38,7 @@ class SpaceNPCMap:
         "frozen_planet_inhabitant": "/static/images/npcs/space/spacesuit.png",
         "moon_inhabitant": "/static/images/npcs/space/change.png",
         "engineer": "/static/images/npcs/space/researcher.png",
-        "astronaut": "/static/images/npcs/space/spacesuit.png",
+        "crewmate": "/static/images/npcs/space/spacesuit.png",
         "scientist": "/static/images/npcs/space/researcher.png",
         "lost_astronaut": "/static/images/npcs/space/spacesuit.png",
 
@@ -47,7 +47,6 @@ class FantasyNPCMap:
     MAP = {
         "mysterious_figure": "/static/images/npcs/fantasy/cloaked.png",
         "hostile_entity": "/static/images/npcs/fantasy/cloaked.png",
-        "chaotic_entity": "/static/images/npcs/fantasy/mushroom.png",
         "talking_mushroom": "/static/images/npcs/fantasy/mushroom.png",
         "wise_old_man": "/static/images/npcs/fantasy/wiseman.png",
         "professor": "/static/images/npcs/fantasy/wiseman.png",
@@ -55,4 +54,6 @@ class FantasyNPCMap:
         "student": "/static/images/npcs/fantasy/witch.png",
         "king": "/static/images/npcs/fantasy/fatking.png",
 
+
     }
+
