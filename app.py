@@ -37,7 +37,7 @@ def video_worker(worker_id):
     global job_counter
     while True:
         try:
-            task = video_queues[worker_id].get(timeout=360)
+            task = video_queues[worker_id].get(timeout=500)
         except queue.Empty:
             with open("video_queue.log", "a") as logfile:
                 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -198,7 +198,7 @@ def runGame():
                     init_dict = {}
                     init_dict["available_npcs"] = list(SpaceNPCMap.MAP.keys())
                     init_dict["available_locations"] = list(SpaceLocationMap.MAP.keys())
-                    init_dict["initial_prompt"] = f"Space adventure starting in {random.choice(init_dict['available_locations'])}, conflict, "
+                    init_dict["initial_prompt"] = f"Space adventure, conflict oriented, control room starting in {random.choice(init_dict['available_locations'])}, conflict, "
                     with open("mode.txt", "w") as f:
                         f.write("space")
             context = Context(init_dict)
